@@ -1,7 +1,13 @@
 ﻿<ul>
-    <li>@ViewBag.GameInfo</li>
-   @* <li>@ViewBag.GameInfo["name"]</li>
-    <li>@ViewBag.GameInfo["summary"]</li>*@
-
+    @* <li>@ViewBag.GameInfo</li>
+        <li>@ViewBag.GameInfo["name"]</li>
+        <li>@ViewBag.GameInfo["summary"]</li>*@
+    @foreach(dynamic item in ViewBag.GameInfo)
+    {
+    <li>ID: @item.GetValue("id")</li>
+    <li>Name: @item.GetValue("name")</li>
+    <li>Summary: @item.GetValue("summary")</li>
+    }
+    
 </ul>
 
