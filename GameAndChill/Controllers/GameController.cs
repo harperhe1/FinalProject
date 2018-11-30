@@ -17,6 +17,10 @@ namespace GameAndChill.Controllers
             GetGame1942();
             return View();
         }
+        public ActionResult Details()
+        {
+            return View();
+        }
         string APIKey = System.Configuration.ConfigurationManager.AppSettings["user-key"];
 
         public void GetGame1942()
