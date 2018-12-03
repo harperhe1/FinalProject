@@ -15,7 +15,8 @@ namespace GameAndChill.Controllers
         // GET: Game
         public ActionResult Index()
         {
-            GetGame1942();
+            JObject TheWitcher = GetGameByID(1942);
+            ViewBag.GameInfo = TheWitcher;
             return View();
         }
         public ActionResult Details()
@@ -27,36 +28,37 @@ namespace GameAndChill.Controllers
         GameAndChillDBEntities ORM = new GameAndChillDBEntities();
 
         //Test api with this method. Gets The Witcher 3 and pushes into a viewbag 
-        public void GetGame1942()
-        {
-            //make our resquest
-            HttpWebRequest request = WebRequest.CreateHttp("https://api-endpoint.igdb.com/games/1942");
+        //public void GetGame1942()
+        //{
+        //    //make our resquest
+        //    HttpWebRequest request = WebRequest.CreateHttp("https://api-endpoint.igdb.com/games/1942");
 
-            request.Headers.Add("user-key", APIKey);
-            request.Accept = "application/json";
-            //make our response
-            HttpWebResponse response = (HttpWebResponse)request.GetResponse();
+        //    request.Headers.Add("user-key", APIKey);
+        //    request.Accept = "application/json";
+        //    //make our response
+        //    HttpWebResponse response = (HttpWebResponse)request.GetResponse();
 
-            if (response.StatusCode == HttpStatusCode.OK)
-            {
-                //get response stream
-                StreamReader reader = new StreamReader(response.GetResponseStream());
+        //    if (response.StatusCode == HttpStatusCode.OK)
+        //    {
+        //        //get response stream
+        //        StreamReader reader = new StreamReader(response.GetResponseStream());
 
-                //read response stream as string
-                string output = reader.ReadToEnd();
+        //        //read response stream as string
+        //        string output = reader.ReadToEnd();
 
-                //convert response to JSon
-                JArray GameInfo = JArray.Parse(output);
+        //        //convert response to JSon
+        //        JArray GameInfo = JArray.Parse(output);
 
-                ViewBag.GameInfo = GameInfo;
-                reader.Close();
-            }
-        }
+        //        ViewBag.GameInfo = GameInfo;
+        //        reader.Close();
+        //    }
+        //}
+
         // Call this method whenever we want to get a JObject of a specific game
         public JObject GetGameByID(int id)
         {
             //make our resquest
-            HttpWebRequest request = WebRequest.CreateHttp($"https://api-endpoint.igdb.com/games/{id}");
+            HttpWebRequest request = WebRequest.CreateHttp($"https://api-endpoint.igdb.com/games/{id}?expand=keywords,platforms,genres&fields=name,summary,url,cover,keywords.name,platforms.name,genres.name");
 
             request.Headers.Add("user-key", APIKey);
             request.Accept = "application/json";
@@ -85,9 +87,52 @@ namespace GameAndChill.Controllers
             return null;
         }
 
+        // For Multiple Games
+        public JArray GetMultipleGamesByID(int[] id)
+        {
+            string ids = "";
+            for (int i =0; i<id.Length; i++)
+            {
+                ids = ids + i;
+                if (i != id.Length - 1)
+                {
+                    ids = ids + ",";
+                }
+            }
+            //make our resquest
+            HttpWebRequest request = WebRequest.CreateHttp($"https://api-endpoint.igdb.com/games/{ids}?expand=keywords,platforms,genres&fields=name,summary,url,cover,keywords.name,platforms.name,genres.name");
+
+            request.Headers.Add("user-key", APIKey);
+            request.Accept = "application/json";
+            //make our response
+            HttpWebResponse response = (HttpWebResponse)request.GetResponse();
+
+            if (response.StatusCode == HttpStatusCode.OK)
+            {
+                //get response stream
+                StreamReader reader = new StreamReader(response.GetResponseStream());
+
+                //read response stream as string
+                string output = reader.ReadToEnd();
+
+                //convert response to JSon
+                JArray GameInfo = JArray.Parse(output);
+                reader.Close();
+
+                return GameInfo;
+            }
+            // return null if something goes wrong with the request/response
+            return null;
+        }
+
         // add specific game to DB
         public ActionResult AddGameToDB(int id)
         {
+            if(ORM.Games.Find(id) != null)
+            {
+                TempData["Added"] = "Game Already Exists";
+                return RedirectToAction("Index", "Home");
+            }
             JObject game = GetGameByID(id);
 
             // create Game object
@@ -98,12 +143,26 @@ namespace GameAndChill.Controllers
             g.URL = game["url"].ToString();
             g.ImageURL = game["cover"]["url"].ToString();
 
+            foreach(JObject keyword in game["keywords"])
+            {
+                if(ORM.Keywords.Find(keyword["id"].Value<int>()) == null)
+                {
+                    Keyword newKey = new Keyword();
+                    newKey.ID = keyword["id"].Value<int>();
+                    newKey.Name = keyword["name"].Value<string>();
+                    ORM.Keywords.Add(newKey);
+                }
+                g.Keywords.Add(ORM.Keywords.Find(keyword["id"].Value<int>()));
+            }
+
+
+
             // add to DB
             ORM.Games.Add(g);
             ORM.SaveChanges();
 
             // result message
-            TempData["Added"] = $"Added {g.ID} to the database";
+            TempData["Added"] = $"Added {g.Name} to the database";
 
             return RedirectToAction("Index", "Home");
 

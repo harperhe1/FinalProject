@@ -1,15 +1,14 @@
 ﻿<ul>
     @*Example of Game Details*@
-    @foreach(dynamic item in ViewBag.GameInfo)
-    {
-    <li>ID: @item.GetValue("id")</li>
-    <li>Name: @item.GetValue("name")</li>
-    <li>Summary: @item.GetValue("summary")</li>
-    <li><img src="http:@item["cover"].GetValue("url")"/></li>
+    
+    <li>ID: @ViewBag.GameInfo["id"]</li>
+    <li>Name: @ViewBag.GameInfo["name"]</li>
+    <li>Summary: @ViewBag.GameInfo["summary"]</li>
+    <li><img src="http:@ViewBag.GameInfo["cover"]["url"]"/></li>
     <li>
-        <a href="/Game/AddGameToDB?id=@item["id"]">Add to DB</a>
+        <a href="/Game/AddGameToDB?id=@ViewBag.GameInfo["id"]">Add to DB</a>
     </li>
-    }
+    
     
     
 </ul>
