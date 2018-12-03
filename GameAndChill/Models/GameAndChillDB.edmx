@@ -4,7 +4,7 @@
   <edmx:Runtime>
     <!-- SSDL content -->
     <edmx:StorageModels>
-      <Schema Namespace="GameAndChillDBModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+    <Schema Namespace="GameAndChillDBModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
         <EntityType Name="Games">
           <Key>
             <PropertyRef Name="ID" />
@@ -82,10 +82,10 @@
           <Key>
             <PropertyRef Name="ID" />
           </Key>
-          <Property Name="ID" Type="int" Nullable="false" />
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="Name" Type="nvarchar" MaxLength="50" Nullable="false" />
         </EntityType>
-        <Association Name="FK__Genre_Gam__GameI__48CFD27E">
+        <Association Name="FK__Genre_Gam__GameI__01142BA1">
           <End Role="Games" Type="Self.Games" Multiplicity="1" />
           <End Role="Genre_Game" Type="Self.Genre_Game" Multiplicity="*" />
           <ReferentialConstraint>
@@ -97,7 +97,7 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK__Genre_Gam__Genre__47DBAE45">
+        <Association Name="FK__Genre_Gam__Genre__00200768">
           <End Role="Genres" Type="Self.Genres" Multiplicity="1" />
           <End Role="Genre_Game" Type="Self.Genre_Game" Multiplicity="*" />
           <ReferentialConstraint>
@@ -109,7 +109,7 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK__Keyword_G__GameI__4CA06362">
+        <Association Name="FK__Keyword_G__GameI__04E4BC85">
           <End Role="Games" Type="Self.Games" Multiplicity="1" />
           <End Role="Keyword_Game" Type="Self.Keyword_Game" Multiplicity="*" />
           <ReferentialConstraint>
@@ -121,7 +121,7 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK__Keyword_G__Keywo__4BAC3F29">
+        <Association Name="FK__Keyword_G__Keywo__03F0984C">
           <End Role="Keywords" Type="Self.Keywords" Multiplicity="1" />
           <End Role="Keyword_Game" Type="Self.Keyword_Game" Multiplicity="*" />
           <ReferentialConstraint>
@@ -133,7 +133,7 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK__Platform___GameI__5070F446">
+        <Association Name="FK__Platform___GameI__08B54D69">
           <End Role="Games" Type="Self.Games" Multiplicity="1" />
           <End Role="Platform_Game" Type="Self.Platform_Game" Multiplicity="*" />
           <ReferentialConstraint>
@@ -145,7 +145,7 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK__Platform___Platf__4F7CD00D">
+        <Association Name="FK__Platform___Platf__07C12930">
           <End Role="Platforms" Type="Self.Platforms" Multiplicity="1" />
           <End Role="Platform_Game" Type="Self.Platform_Game" Multiplicity="*" />
           <ReferentialConstraint>
@@ -157,7 +157,7 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK__Questions__UserI__412EB0B6">
+        <Association Name="FK__Questions__UserI__797309D9">
           <End Role="Users" Type="Self.Users" Multiplicity="1" />
           <End Role="Questions" Type="Self.Questions" Multiplicity="*" />
           <ReferentialConstraint>
@@ -169,7 +169,7 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK__User_Game__GameI__44FF419A">
+        <Association Name="FK__User_Game__GameI__7D439ABD">
           <End Role="Games" Type="Self.Games" Multiplicity="1" />
           <End Role="User_Game" Type="Self.User_Game" Multiplicity="*" />
           <ReferentialConstraint>
@@ -181,7 +181,7 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK__User_Game__UserI__440B1D61">
+        <Association Name="FK__User_Game__UserI__7C4F7684">
           <End Role="Users" Type="Self.Users" Multiplicity="1" />
           <End Role="User_Game" Type="Self.User_Game" Multiplicity="*" />
           <ReferentialConstraint>
@@ -204,45 +204,44 @@
           <EntitySet Name="Questions" EntityType="Self.Questions" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="User_Game" EntityType="Self.User_Game" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Users" EntityType="Self.Users" Schema="dbo" store:Type="Tables" />
-          <AssociationSet Name="FK__Genre_Gam__GameI__48CFD27E" Association="Self.FK__Genre_Gam__GameI__48CFD27E">
+          <AssociationSet Name="FK__Genre_Gam__GameI__01142BA1" Association="Self.FK__Genre_Gam__GameI__01142BA1">
             <End Role="Games" EntitySet="Games" />
             <End Role="Genre_Game" EntitySet="Genre_Game" />
           </AssociationSet>
-          <AssociationSet Name="FK__Genre_Gam__Genre__47DBAE45" Association="Self.FK__Genre_Gam__Genre__47DBAE45">
+          <AssociationSet Name="FK__Genre_Gam__Genre__00200768" Association="Self.FK__Genre_Gam__Genre__00200768">
             <End Role="Genres" EntitySet="Genres" />
             <End Role="Genre_Game" EntitySet="Genre_Game" />
           </AssociationSet>
-          <AssociationSet Name="FK__Keyword_G__GameI__4CA06362" Association="Self.FK__Keyword_G__GameI__4CA06362">
+          <AssociationSet Name="FK__Keyword_G__GameI__04E4BC85" Association="Self.FK__Keyword_G__GameI__04E4BC85">
             <End Role="Games" EntitySet="Games" />
             <End Role="Keyword_Game" EntitySet="Keyword_Game" />
           </AssociationSet>
-          <AssociationSet Name="FK__Keyword_G__Keywo__4BAC3F29" Association="Self.FK__Keyword_G__Keywo__4BAC3F29">
+          <AssociationSet Name="FK__Keyword_G__Keywo__03F0984C" Association="Self.FK__Keyword_G__Keywo__03F0984C">
             <End Role="Keywords" EntitySet="Keywords" />
             <End Role="Keyword_Game" EntitySet="Keyword_Game" />
           </AssociationSet>
-          <AssociationSet Name="FK__Platform___GameI__5070F446" Association="Self.FK__Platform___GameI__5070F446">
+          <AssociationSet Name="FK__Platform___GameI__08B54D69" Association="Self.FK__Platform___GameI__08B54D69">
             <End Role="Games" EntitySet="Games" />
             <End Role="Platform_Game" EntitySet="Platform_Game" />
           </AssociationSet>
-          <AssociationSet Name="FK__Platform___Platf__4F7CD00D" Association="Self.FK__Platform___Platf__4F7CD00D">
+          <AssociationSet Name="FK__Platform___Platf__07C12930" Association="Self.FK__Platform___Platf__07C12930">
             <End Role="Platforms" EntitySet="Platforms" />
             <End Role="Platform_Game" EntitySet="Platform_Game" />
           </AssociationSet>
-          <AssociationSet Name="FK__Questions__UserI__412EB0B6" Association="Self.FK__Questions__UserI__412EB0B6">
+          <AssociationSet Name="FK__Questions__UserI__797309D9" Association="Self.FK__Questions__UserI__797309D9">
             <End Role="Users" EntitySet="Users" />
             <End Role="Questions" EntitySet="Questions" />
           </AssociationSet>
-          <AssociationSet Name="FK__User_Game__GameI__44FF419A" Association="Self.FK__User_Game__GameI__44FF419A">
+          <AssociationSet Name="FK__User_Game__GameI__7D439ABD" Association="Self.FK__User_Game__GameI__7D439ABD">
             <End Role="Games" EntitySet="Games" />
             <End Role="User_Game" EntitySet="User_Game" />
           </AssociationSet>
-          <AssociationSet Name="FK__User_Game__UserI__440B1D61" Association="Self.FK__User_Game__UserI__440B1D61">
+          <AssociationSet Name="FK__User_Game__UserI__7C4F7684" Association="Self.FK__User_Game__UserI__7C4F7684">
             <End Role="Users" EntitySet="Users" />
             <End Role="User_Game" EntitySet="User_Game" />
           </AssociationSet>
         </EntityContainer>
-      </Schema>
-    </edmx:StorageModels>
+      </Schema></edmx:StorageModels>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
       <Schema Namespace="GameAndChillDBModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
