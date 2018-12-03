@@ -44,6 +44,10 @@ namespace GameAndChill.Controllers
             ViewBag.CurrentUser = currentUser;
             return View();
         }
+        //public ActionResult SubmitQuestions(int id, int question1, int question2, int question3, int question4, int questions5)
+        //{
+            //Code will go here. Commented out to be able to build without errors
+        //}
         public ActionResult Edit()
         {
             return View();

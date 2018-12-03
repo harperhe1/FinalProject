@@ -3,13 +3,45 @@
     ViewBag.Title = "Questions";
 }
 
-<h2>Hello @ViewBag.CurrentUser.Name Here are some Questions you need to answer</h2>
+<h2>Hello @ViewBag.CurrentUser.Name </h2>
+<h2>Here are some Questions you need to answer</h2>
 
 <label>Question 1</label>
-<p>@*Filling the question for the time being*@Favorite Disney Character</p>
-<select>
-    <option value="1">Ariel</option>
-    <option value="2">Jasmine</option>
-    <option value="3">Belle</option>
-    <option value="4">Cinderella</option>
-</select><br /><br />
+<form action="/User/SubmitQuestions" method="post">
+    <p>@*Filling the question for the time being*@Favorite Disney Princess</p>
+    <select name="question1">
+        <option value="1">Ariel</option>
+        <option value="2">Jasmine</option>
+        <option value="3">Belle</option>
+        <option value="4">Cinderella</option>
+    </select><br /><br />
+    <p>What Super Power Do you have?</p>
+    <select name="question2">
+        <option value="1">Muting People's shit</option>
+    </select>
+    <p>Favorite Day Of The Week</p>
+    <select name="question3">
+        <option value="1">Monday</option>
+        <option value="2">Monday</option>
+        <option value="3">Monday</option>
+        <option value="4">Monday</option>
+        <option value="5">Monday</option>
+    </select>
+    <p>Favorite Sport</p>
+    <select name="question4">
+        <option value="1">Shot Put</option>
+        <option value="2">Curling</option>
+        <option value="3">Egg Throwing</option>
+        <option value="4">Underwater Hockey</option>
+        <option value="5">Soccer</option>
+    </select>
+    <p>What He-Man Villian Would you be?</p>
+    <select name="question5">
+        <option value="1">Skeletor</option>
+        <option value="2">Beast Man</option>
+        <option value="3">Evil Lyn</option>
+        <option value="4">Trap Jaw</option>
+        <option value="5">King Hiss</option>
+    </select>
+    <input type="submit" value="Submit" />
+</form>
