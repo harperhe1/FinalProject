@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+ <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+      <Diagram DiagramId="263e362d490e46a8b5ad41e36722ba65" Name="Diagram1">
+        <EntityTypeShape EntityType="GameAndChillDBModel.Game" Width="1.5" PointX="0.75" PointY="5.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="GameAndChillDBModel.Genre" Width="1.5" PointX="3" PointY="3.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="GameAndChillDBModel.Keyword" Width="1.5" PointX="3" PointY="5.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="GameAndChillDBModel.Platform" Width="1.5" PointX="3" PointY="8.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="GameAndChillDBModel.Question" Width="1.5" PointX="6" PointY="2.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="GameAndChillDBModel.User_Game" Width="1.5" PointX="6" PointY="5.625" IsExpanded="true" />
+        <EntityTypeShape EntityType="GameAndChillDBModel.User" Width="1.5" PointX="3.75" PointY="0.75" IsExpanded="true" />
+        <AssociationConnector Association="GameAndChillDBModel.FK__User_Game__GameI__44FF419A" ManuallyRouted="false" />
+        <AssociationConnector Association="GameAndChillDBModel.FK__Questions__UserI__412EB0B6" ManuallyRouted="false" />
+        <AssociationConnector Association="GameAndChillDBModel.FK__User_Game__UserI__440B1D61" ManuallyRouted="false" />
+        <AssociationConnector Association="GameAndChillDBModel.Genre_Game" ManuallyRouted="false" />
+        <AssociationConnector Association="GameAndChillDBModel.Keyword_Game" ManuallyRouted="false" />
+        <AssociationConnector Association="GameAndChillDBModel.Platform_Game" ManuallyRouted="false" />
+      </Diagram>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>
