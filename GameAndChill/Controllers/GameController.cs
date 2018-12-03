@@ -54,11 +54,14 @@ namespace GameAndChill.Controllers
         //    }
         //}
 
+        string expander = "?expand=keywords,platforms,genres&fields=name,summary,url,cover,keywords.name,platforms.name,genres.name";
+
+
         // Call this method whenever we want to get a JObject of a specific game
         public JObject GetGameByID(int id)
         {
             //make our resquest
-            HttpWebRequest request = WebRequest.CreateHttp($"https://api-endpoint.igdb.com/games/{id}?expand=keywords,platforms,genres&fields=name,summary,url,cover,keywords.name,platforms.name,genres.name");
+            HttpWebRequest request = WebRequest.CreateHttp($"https://api-endpoint.igdb.com/games/{id}{expander}");
 
             request.Headers.Add("user-key", APIKey);
             request.Accept = "application/json";
@@ -90,6 +93,7 @@ namespace GameAndChill.Controllers
         // For Multiple Games
         public JArray GetMultipleGamesByID(int[] id)
         {
+            // takes all the ids in the array and puts it into a string that can be used in the url
             string ids = "";
             for (int i =0; i<id.Length; i++)
             {
@@ -99,8 +103,9 @@ namespace GameAndChill.Controllers
                     ids = ids + ",";
                 }
             }
+
             //make our resquest
-            HttpWebRequest request = WebRequest.CreateHttp($"https://api-endpoint.igdb.com/games/{ids}?expand=keywords,platforms,genres&fields=name,summary,url,cover,keywords.name,platforms.name,genres.name");
+            HttpWebRequest request = WebRequest.CreateHttp($"https://api-endpoint.igdb.com/games/{ids}{expander}");
 
             request.Headers.Add("user-key", APIKey);
             request.Accept = "application/json";
@@ -128,11 +133,13 @@ namespace GameAndChill.Controllers
         // add specific game to DB
         public ActionResult AddGameToDB(int id)
         {
-            if(ORM.Games.Find(id) != null)
+            // if Game is already in DB, don't do anything
+            if (ORM.Games.Find(id) != null)
             {
                 TempData["Added"] = "Game Already Exists";
                 return RedirectToAction("Index", "Home");
             }
+
             JObject game = GetGameByID(id);
 
             // create Game object
@@ -145,17 +152,18 @@ namespace GameAndChill.Controllers
 
             foreach(JObject keyword in game["keywords"])
             {
-                if(ORM.Keywords.Find(keyword["id"].Value<int>()) == null)
+                // check if keyword is in DB
+                if (ORM.Keywords.Find(keyword["id"].Value<int>()) == null)
                 {
+                    // create Keyword object and add to DB
                     Keyword newKey = new Keyword();
                     newKey.ID = keyword["id"].Value<int>();
                     newKey.Name = keyword["name"].Value<string>();
                     ORM.Keywords.Add(newKey);
                 }
+                // pair the Keyword to the Game in the Keyword_Game table 
                 g.Keywords.Add(ORM.Keywords.Find(keyword["id"].Value<int>()));
             }
-
-
 
             // add to DB
             ORM.Games.Add(g);
