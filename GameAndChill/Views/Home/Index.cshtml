@@ -2,8 +2,9 @@
 <br />
 <h2>List Of Users</h2>
 <ul>
-    @*foreach loop for all users in DB*@
-    <li>User 1</li>
-    <li>User 2</li>
+    @foreach(dynamic user in ViewBag.Users)
+    {
+        <li><a href="/User/Index?id=@user.ID">@user.Name</a></li>
+    }
 </ul>
 <a href="/Game/Index">Test API (Print The Witcher 3 Details)</a>

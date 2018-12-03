@@ -3,14 +3,18 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using GameAndChill.Models;
 
 namespace GameAndChill.Controllers
 {
     public class HomeController : Controller
     {
-        
+        GameAndChillDBEntities ORM = new GameAndChillDBEntities();
         public ActionResult Index()
         {
+            // display list of users
+
+            ViewBag.Users = ORM.Users.ToList();
             return View();
         }
 
