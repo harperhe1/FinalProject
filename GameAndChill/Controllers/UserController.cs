@@ -44,10 +44,43 @@ namespace GameAndChill.Controllers
             ViewBag.CurrentUser = currentUser;
             return View();
         }
-        //public ActionResult SubmitQuestions(int id, int question1, int question2, int question3, int question4, int questions5)
-        //{
+        public ActionResult SubmitQuestions(int id, int question1, int question2, int question3, int question4, int question5)
+        {
             //Code will go here. Commented out to be able to build without errors
-        //}
+            Question q1 = new Question();
+            q1.UserID = id;
+            q1.ID = 1;
+            q1.Answer = question1;
+            ORM.Questions.Add(q1);
+
+            Question q2 = new Question();
+            q2.UserID = id;
+            q2.ID = 2;
+            q2.Answer = question2;
+            ORM.Questions.Add(q2);
+
+            Question q3 = new Question();
+            q3.UserID = id;
+            q3.ID = 3;
+            q3.Answer = question3;
+            ORM.Questions.Add(q3);
+
+            Question q4 = new Question();
+            q4.UserID = id;
+            q4.ID = 4;
+            q4.Answer = question4;
+            ORM.Questions.Add(q4);
+
+            Question q5 = new Question();
+            q5.UserID = id;
+            q5.ID = 5;
+            q5.Answer = question5;
+            ORM.Questions.Add(q5);
+
+            ORM.SaveChanges();
+
+            return RedirectToAction("Index", new { id });
+        }
         public ActionResult Edit()
         {
             return View();

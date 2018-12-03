@@ -5,9 +5,10 @@
 
 <h2>Hello @ViewBag.CurrentUser.Name </h2>
 <h2>Here are some Questions you need to answer</h2>
-
+<br />
 <label>Question 1</label>
 <form action="/User/SubmitQuestions" method="post">
+    <input type="hidden" name="id" value="@ViewBag.CurrentUser.ID"/>
     <p>@*Filling the question for the time being*@Favorite Disney Princess</p>
     <select name="question1">
         <option value="1">Ariel</option>
@@ -18,7 +19,7 @@
     <p>What Super Power Do you have?</p>
     <select name="question2">
         <option value="1">Muting People's shit</option>
-    </select>
+    </select><br /><br />
     <p>Favorite Day Of The Week</p>
     <select name="question3">
         <option value="1">Monday</option>
@@ -26,7 +27,7 @@
         <option value="3">Monday</option>
         <option value="4">Monday</option>
         <option value="5">Monday</option>
-    </select>
+    </select><br /><br />
     <p>Favorite Sport</p>
     <select name="question4">
         <option value="1">Shot Put</option>
@@ -34,7 +35,7 @@
         <option value="3">Egg Throwing</option>
         <option value="4">Underwater Hockey</option>
         <option value="5">Soccer</option>
-    </select>
+    </select><br /><br />
     <p>What He-Man Villian Would you be?</p>
     <select name="question5">
         <option value="1">Skeletor</option>
@@ -42,6 +43,6 @@
         <option value="3">Evil Lyn</option>
         <option value="4">Trap Jaw</option>
         <option value="5">King Hiss</option>
-    </select>
+    </select><br /><br />
     <input type="submit" value="Submit" />
 </form>
