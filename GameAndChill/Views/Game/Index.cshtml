@@ -6,7 +6,11 @@
     <li>Name: @item.GetValue("name")</li>
     <li>Summary: @item.GetValue("summary")</li>
     <li><img src="http:@item["cover"].GetValue("url")"/></li>
+    <li>
+        <a href="/Game/AddGameToDB?id=@item["id"]">Add to DB</a>
+    </li>
     }
+    
     
 </ul>
 
