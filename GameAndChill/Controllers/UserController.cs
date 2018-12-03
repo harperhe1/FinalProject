@@ -24,6 +24,9 @@ namespace GameAndChill.Controllers
         }
         public ActionResult SignUp()
         {
+            User test = new User();
+            int temp;
+            temp = ORM.Users.Last().ID;
             return View();
         }
         public ActionResult Edit()

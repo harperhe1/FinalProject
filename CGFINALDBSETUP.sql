@@ -1,8 +1,9 @@
 create database GameAndChillDB
 Go
 create table GameAndChillDB.dbo.Users(
-	ID int primary key,
+	ID int primary key IDENTITY(1,1),
 	Name nvarchar(50) not null
+
 )
 create table GameAndChillDB.dbo.Games(
 	ID int primary key,
