@@ -29,10 +29,13 @@ namespace GameAndChill.Controllers
 
         public ActionResult AddUser(User newUser)
         {
-            int? id;
-            id = ORM.Users.Add(newUser).ID;
-            ORM.SaveChanges();            
-            return RedirectToAction("Index",id);
+            int id;
+            ORM.Users.Add(newUser);
+            ORM.SaveChanges();
+            List<User> users = ORM.Users.Where(x => x.Name == newUser.Name).ToList();
+            id = users[users.Count - 1].ID;
+            ViewBag.id = id;
+            return RedirectToAction("Index", new { id });
 
         }
         public ActionResult Edit()
