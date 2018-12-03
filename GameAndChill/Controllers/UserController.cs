@@ -24,19 +24,15 @@ namespace GameAndChill.Controllers
         }
         public ActionResult SignUp()
         {
-            User test = new User();
-            int temp;
-            temp = ORM.Users.Last().ID;
             return View();
         }
 
         public ActionResult AddUser(User newUser)
         {
-            newUser.ID = ORM.Users.Last().ID + 1;
-            ORM.Users.Add(newUser);
-            ORM.SaveChanges();
-            int id = newUser.ID;
-            return RedirectToAction("/User/Index",id);
+            int? id;
+            id = ORM.Users.Add(newUser).ID;
+            ORM.SaveChanges();            
+            return RedirectToAction("Index",id);
 
         }
         public ActionResult Edit()
