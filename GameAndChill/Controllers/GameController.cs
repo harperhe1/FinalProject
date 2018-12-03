@@ -63,6 +63,7 @@ namespace GameAndChill.Controllers
             //make our resquest
             HttpWebRequest request = WebRequest.CreateHttp($"https://api-endpoint.igdb.com/games/{id}{expander}");
 
+
             request.Headers.Add("user-key", APIKey);
             request.Accept = "application/json";
             //make our response
