@@ -166,6 +166,23 @@ namespace GameAndChill.Controllers
                 g.Keywords.Add(ORM.Keywords.Find(keyword["id"].Value<int>()));
             }
 
+            foreach(JObject platform in game["platforms"])
+            {
+                if (ORM.Platforms.Find(platform["id"].Value<int>()) == null)
+                {
+                    Platform newPlatform = new Platform();
+                    newPlatform.ID = platform["id"].Value<int>();
+                    newPlatform.Name = platform["name"].Value<string>();
+                    ORM.Platforms.Add(newPlatform);
+                }
+                g.Platforms.Add(ORM.Platforms.Find(platform["id"].Value<int>()));
+            }
+
+            /*foreach(JObject genre in game["genres"])
+            {
+                if(ORM.Genres.Find())
+            }*/
+
             // add to DB
             ORM.Games.Add(g);
             ORM.SaveChanges();
