@@ -35,8 +35,14 @@ namespace GameAndChill.Controllers
             List<User> users = ORM.Users.Where(x => x.Name == newUser.Name).ToList();
             id = users[users.Count - 1].ID;
             ViewBag.id = id;
-            return RedirectToAction("Index", new { id });
-
+            //return RedirectToAction("Index", new { id });
+            return RedirectToAction("Questions", new { id });
+        }
+        public ActionResult Questions(int id)
+        {
+            User currentUser = ORM.Users.Find(id);
+            ViewBag.CurrentUser = currentUser;
+            return View();
         }
         public ActionResult Edit()
         {
