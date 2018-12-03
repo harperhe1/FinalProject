@@ -46,9 +46,19 @@ namespace GameAndChill.Controllers
         {
             return View();
         }
-        public ActionResult Delete()
+        //public ActionResult Delete()   Commented this line out for the time being. I don't think we need it -SR
+        //{
+        //    return View("Index", "Home");
+        //}
+        public ActionResult DeleteUser(int id) //Delete a user from the database
         {
-            return View("Home/Index");
+            //Find user ID
+            User userDelete = ORM.Users.Find(id);
+            //Remove the user ID
+            ORM.Users.Remove(userDelete);
+            //SaveChanges duhhhhhhhh (Kidding, for real though it does save the changes to the DB)
+            ORM.SaveChanges();
+            return RedirectToAction("Index", "Home");
         }
     }
 }

@@ -13,6 +13,6 @@
 </table>
 <a href="/User/GameFinder">Find Game</a><br />
 <a href="/User/Edit">Edit Answers</a><br />
-<a href="/User/DeleteUser" onclick="return confirm('Are you sure you want to delete this user?')" class="btn-danger btn-sm" name="delete">Delete User</a><br />
+<a href="/User/DeleteUser?id=@ViewBag.CurrentUser.ID" onclick="return confirm('Are you sure you want to delete this user?')" class="btn-danger btn-sm" name="DeleteUser">Delete User</a><br />
 <a href="/Home/Index">Sign Out</a>
 
