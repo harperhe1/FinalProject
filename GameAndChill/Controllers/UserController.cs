@@ -29,6 +29,16 @@ namespace GameAndChill.Controllers
             temp = ORM.Users.Last().ID;
             return View();
         }
+
+        public ActionResult AddUser(User newUser)
+        {
+            newUser.ID = ORM.Users.Last().ID + 1;
+            ORM.Users.Add(newUser);
+            ORM.SaveChanges();
+            int id = newUser.ID;
+            return RedirectToAction("/User/Index",id);
+
+        }
         public ActionResult Edit()
         {
             return View();
