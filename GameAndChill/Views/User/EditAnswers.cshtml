@@ -8,6 +8,9 @@
 <h2>Hello @ViewBag.CurrentUser.Name </h2>
 
 <br />
+
+<a href="/User/Index?id=@ViewBag.CurrentUser.ID">Cancel</a>
+<br /><br />
 <label>Question 1</label>
 <form action="/User/SaveQuestionChanges" method="post">
     <input type="hidden" name="id" value="@ViewBag.CurrentUser.ID" />
