@@ -12,13 +12,25 @@ namespace GameAndChill.Controllers
         GameAndChillDBEntities ORM = new GameAndChillDBEntities();
         
         // GET: User
-        public ActionResult Index(int id)
+        public ActionResult Index(int? id)
         {
             // User Home page. Get information about the user
 
-            // TODO: validate id and display correct error page for out-of-range or bad request
+            // redirect to home if we try to go to user index without selecting a user
+            if(id == null)
+            {
+                return RedirectToAction("Index", "Home");
+            }
 
+            // if the ID doesn't match a user in the database, return an error
             User currentUser = ORM.Users.Find(id);
+            if(currentUser == null)
+            {
+                ViewBag.Error = "User does not exist.";
+                return View("Error");
+            }
+            
+            // pass user info to the view
             ViewBag.CurrentUser = currentUser;
             return View();
         }
@@ -26,17 +38,31 @@ namespace GameAndChill.Controllers
         {
             return View();
         }
-
         public ActionResult AddUser(User newUser)
         {
             int id;
+
+            // add to DB
             ORM.Users.Add(newUser);
             ORM.SaveChanges();
+
+            // get the ID of our new user; send to viewbag
             List<User> users = ORM.Users.Where(x => x.Name == newUser.Name).ToList();
             id = users[users.Count - 1].ID;
             ViewBag.id = id;
-            //return RedirectToAction("Index", new { id });
+
             return RedirectToAction("Questions", new { id });
+        }
+
+
+        public bool ValidAnswer(int q)
+        {
+            // Check if the answer passed in is between 1 and 5. If not, we don't want that in our database and messing anything up!
+            if (q <= 5 && q >= 1)
+            {
+                return true;
+            }
+            return false;
         }
         public ActionResult Questions(int id)
         {
@@ -44,10 +70,37 @@ namespace GameAndChill.Controllers
             ViewBag.CurrentUser = currentUser;
             return View();
         }
+        public void AddQuestionToDB(int id, int answer, int qNum)
+        {
+            // create Question object and define its properties
+            Question q = new Question();
+            q.UserID = id;
+            q.ID = 1;
+            q.Answer = answer;
+
+            // add to DB
+            ORM.Questions.Add(q);
+        }
         public ActionResult SubmitQuestions(int id, int question1, int question2, int question3, int question4, int question5)
         {
-            //Code will go here. Commented out to be able to build without errors
-            Question q1 = new Question();
+            // Validation
+            if (!ValidAnswer(question1) || !ValidAnswer(question2) || !ValidAnswer(question3) || !ValidAnswer(question4) || !ValidAnswer(question5))
+            {
+                ViewBag.Error = "One or more of your question submissions was invalid. Try Again.";
+                return View("Error");
+            }
+            
+            // run the same method for different questions
+            AddQuestionToDB(id, question1, 1);
+            AddQuestionToDB(id, question2, 2);
+            AddQuestionToDB(id, question3, 3);
+            AddQuestionToDB(id, question4, 4);
+            AddQuestionToDB(id, question5, 5);
+
+            
+            // Original Code. Now generalized in the method "AddQuestionToDB". -David
+
+            /*Question q1 = new Question();
             q1.UserID = id;
             q1.ID = 1;
             q1.Answer = question1;
@@ -75,31 +128,63 @@ namespace GameAndChill.Controllers
             q5.UserID = id;
             q5.ID = 5;
             q5.Answer = question5;
-            ORM.Questions.Add(q5);
+            ORM.Questions.Add(q5);*/
 
             ORM.SaveChanges();
 
             return RedirectToAction("Index", new { id });
         }
+
+
         public ActionResult EditAnswers(int id)
         {
+            // pull users original answers
             List<Question> found = ORM.Questions.Where(x=>x.UserID==id).ToList();
 
+            // if user hasn't submitted their answers yet, redirect to Questions method
             if(found.Count == 0)
             {
                 return RedirectToAction("Questions", new { id });
             }
             
-            //TODO: Pull users original answers
+            // pass current user and their original answers to the view
             User currentUser = ORM.Users.Find(id);
             ViewBag.CurrentUser = currentUser;
+            ViewBag.Answers = found; // TODO: use this viewbag
             
             return View();
         }
+        public void EditQuestionInDB(int id, int answer, int qNum)
+        {
+            // create Question object and define its properties
+            Question q = new Question();
+            q.UserID = id;
+            q.ID = 1;
+            q.Answer = answer;
 
+            // modify entry in DB
+            ORM.Entry(q).State = System.Data.Entity.EntityState.Modified;
+        }
         public ActionResult SaveQuestionChanges(int id, int question1, int question2, int question3, int question4, int question5)
         {
-            Question editQ1 = new Question();
+            // Validation
+            if (!ValidAnswer(question1) || !ValidAnswer(question2) || !ValidAnswer(question3) || !ValidAnswer(question4) || !ValidAnswer(question5))
+            {
+                ViewBag.Error = "One or more of your question submissions was invalid. Try Again.";
+                return View("Error");
+            }
+
+            // modify each question
+            EditQuestionInDB(id, question1, 1);
+            EditQuestionInDB(id, question2, 2);
+            EditQuestionInDB(id, question3, 3);
+            EditQuestionInDB(id, question4, 4);
+            EditQuestionInDB(id, question5, 5);
+
+
+            // Original Code. Now generalized in the method "EditQuestionInDB". -David
+
+            /*Question editQ1 = new Question();
             editQ1.UserID = id;
             editQ1.ID = 1;
             editQ1.Answer = question1;
@@ -127,14 +212,15 @@ namespace GameAndChill.Controllers
             editQ5.UserID = id;
             editQ5.ID = 5;
             editQ5.Answer = question5;
-            ORM.Entry(editQ5).State = System.Data.Entity.EntityState.Modified;
+            ORM.Entry(editQ5).State = System.Data.Entity.EntityState.Modified;*/
 
             ORM.SaveChanges();
 
             return RedirectToAction("Index", new { id });
         }
-         public ActionResult GameFinder(int gameID, int userID)
 
+
+        public ActionResult GameFinder(int gameID, int userID)
         {
             Game game = ORM.Games.Find(gameID);
             User user = ORM.Users.Find(userID);
@@ -144,9 +230,11 @@ namespace GameAndChill.Controllers
         }
         public ActionResult LikeGame(bool isLike, int userID, int gameID)
         {
+            // check database if it's liked or disliked by this user
             User_Game found = ORM.User_Game.Find(userID, gameID);
             if (found == null)
             {
+                // if not, create object and add to DB
                 User_Game userGame = new User_Game();
                 userGame.UserID = userID;
                 userGame.GameID = gameID;
@@ -155,10 +243,12 @@ namespace GameAndChill.Controllers
             }
             else
             {
+                // set like status to isLike
                 found.IsLike = isLike;
             }
             ORM.SaveChanges();
 
+            // return status message to the user (liked or disliked)
             string like = "";
             if (isLike) { like = "liked"; }
             else { like = "disliked"; }
@@ -166,18 +256,25 @@ namespace GameAndChill.Controllers
 
             return RedirectToAction("GameFinder", new { gameID, userID });
         }
-        //public ActionResult Delete()   Commented this line out for the time being. I don't think we need it -SR
-        //{
-        //    return View("Index", "Home");
-        //}
+
+
         public ActionResult DeleteUser(int id) //Delete a user from the database
         {
             //Find user ID
             User userDelete = ORM.Users.Find(id);
+
+            //Get their name
+            string name = userDelete.Name;
+
             //Remove the user ID
             ORM.Users.Remove(userDelete);
+
             //SaveChanges duhhhhhhhh (Kidding, for real though it does save the changes to the DB)
             ORM.SaveChanges();
+
+            // Send their name back to the view
+            TempData["Eulogy"] = $"{name} has been deleted.";
+
             return RedirectToAction("Index", "Home");
         }
     }
