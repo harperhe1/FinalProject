@@ -75,7 +75,7 @@ namespace GameAndChill.Controllers
             // create Question object and define its properties
             Question q = new Question();
             q.UserID = id;
-            q.ID = 1;
+            q.ID = qNum;
             q.Answer = answer;
 
             // add to DB
@@ -159,7 +159,7 @@ namespace GameAndChill.Controllers
             // create Question object and define its properties
             Question q = new Question();
             q.UserID = id;
-            q.ID = 1;
+            q.ID = qNum;
             q.Answer = answer;
 
             // modify entry in DB
