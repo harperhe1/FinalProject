@@ -41,7 +41,11 @@ namespace GameAndChill.Controllers
         public ActionResult AddUser(User newUser)
         {
             int id;
-
+            if(newUser.Name == null || newUser.Name == "")
+            {
+                ViewBag.Error = "Must have a name";
+                return View("Error");
+            }
             // add to DB
             ORM.Users.Add(newUser);
             ORM.SaveChanges();
