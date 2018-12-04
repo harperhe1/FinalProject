@@ -100,7 +100,7 @@ namespace GameAndChill.Controllers
             string ids = "";
             for (int i =0; i<id.Length; i++)
             {
-                ids = ids + i;
+                ids = ids + id[i];
                 if (i != id.Length - 1)
                 {
                     ids = ids + ",";
@@ -132,6 +132,25 @@ namespace GameAndChill.Controllers
             // return null if something goes wrong with the request/response
             return null;
         }
+        public ActionResult AddGamesToDb(int startId, int endId)
+        {
+            List<int> ids = new List<int>();
+            for(int i =startId; i < endId +1; i++)
+            {
+                ids.Add(i);
+            }
+            JArray games = GetMultipleGamesByID(ids.ToArray());
+            
+            foreach(JObject game in games)
+            {
+                if (ORM.Games.Find(game["id"].Value<int>()) == null)
+                {
+                    GameToDB(game);
+                }
+            }
+
+            return RedirectToAction("Index","Home");
+        }
 
         // add specific game to DB
         public ActionResult AddGameToDB(int id)
@@ -143,64 +162,81 @@ namespace GameAndChill.Controllers
                 return RedirectToAction("Index", "Home");
             }
 
-            JObject game = GetGameByID(id);
+            GameToDB(GetGameByID(id));
+            
+            return RedirectToAction("Index","Home");
 
+        }
+        public void GameToDB(JObject game)
+        {
             // create Game object
+
             Game g = new Game();
             g.ID = int.Parse(game["id"].ToString());
             g.Name = game["name"].ToString();
-            g.Summary = game["summary"].ToString();
+            if (game["summary"] != null)
+            {
+                if (game["summary"].ToString().Length > 255)
+                    g.Summary = game["summary"].ToString().Substring(0, 255);
+                else
+                    g.Summary = game["summary"].ToString();
+            }
             g.URL = game["url"].ToString();
             g.ImageURL = game["cover"]["url"].ToString();
-
-            foreach(JObject keyword in game["keywords"])
+            if (game["keyword"] != null)
             {
-                // check if keyword is in DB
-                if (ORM.Keywords.Find(keyword["id"].Value<int>()) == null)
+                foreach (JObject keyword in game["keywords"])
                 {
-                    // create Keyword object and add to DB
-                    Keyword newKey = new Keyword();
-                    newKey.ID = keyword["id"].Value<int>();
-                    newKey.Name = keyword["name"].Value<string>();
-                    ORM.Keywords.Add(newKey);
+                    if (keyword["name"].ToString().Length > 50)
+                    {
+                        continue;
+                    }
+                    // check if keyword is in DB
+                    if (ORM.Keywords.Find(keyword["id"].Value<int>()) == null)
+                    {
+                        // create Keyword object and add to DB
+                        Keyword newKey = new Keyword();
+                        newKey.ID = keyword["id"].Value<int>();
+                        newKey.Name = keyword["name"].Value<string>();
+                        ORM.Keywords.Add(newKey);
+                    }
+                    // pair the Keyword to the Game in the Keyword_Game table 
+                    g.Keywords.Add(ORM.Keywords.Find(keyword["id"].Value<int>()));
                 }
-                // pair the Keyword to the Game in the Keyword_Game table 
-                g.Keywords.Add(ORM.Keywords.Find(keyword["id"].Value<int>()));
             }
-
-            foreach(JObject platform in game["platforms"])
+            if (game["platforms"] != null)
             {
-                if (ORM.Platforms.Find(platform["id"].Value<int>()) == null)
+                foreach (JObject platform in game["platforms"])
                 {
-                    Platform newPlatform = new Platform();
-                    newPlatform.ID = platform["id"].Value<int>();
-                    newPlatform.Name = platform["name"].Value<string>();
-                    ORM.Platforms.Add(newPlatform);
+                    if (ORM.Platforms.Find(platform["id"].Value<int>()) == null)
+                    {
+                        Platform newPlatform = new Platform();
+                        newPlatform.ID = platform["id"].Value<int>();
+                        newPlatform.Name = platform["name"].Value<string>();
+                        ORM.Platforms.Add(newPlatform);
+                    }
+                    g.Platforms.Add(ORM.Platforms.Find(platform["id"].Value<int>()));
                 }
-                g.Platforms.Add(ORM.Platforms.Find(platform["id"].Value<int>()));
             }
-
-            foreach(JObject genre in game["genres"])
+            if (game["genres"] != null)
             {
-                if(ORM.Genres.Find(genre["id"].Value<int>()) == null)
+                foreach (JObject genre in game["genres"])
                 {
-                    Genre newGenre = new Genre();
-                    newGenre.ID = genre["id"].Value<int>();
-                    newGenre.Name = genre["name"].Value<string>();
-                    ORM.Genres.Add(newGenre);
+                    if (ORM.Genres.Find(genre["id"].Value<int>()) == null)
+                    {
+                        Genre newGenre = new Genre();
+                        newGenre.ID = genre["id"].Value<int>();
+                        newGenre.Name = genre["name"].Value<string>();
+                        ORM.Genres.Add(newGenre);
+                    }
+                    g.Genres.Add(ORM.Genres.Find(genre["id"].Value<int>()));
                 }
-                g.Genres.Add(ORM.Genres.Find(genre["id"].Value<int>()));
             }
-
             // add to DB
             ORM.Games.Add(g);
             ORM.SaveChanges();
-
             // result message
             TempData["Added"] = $"Added {g.Name} to the database";
-
-            return RedirectToAction("Index", "Home");
-
         }
     }
 }
