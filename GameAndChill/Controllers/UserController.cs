@@ -81,11 +81,53 @@ namespace GameAndChill.Controllers
 
             return RedirectToAction("Index", new { id });
         }
-        public ActionResult Edit()
+        public ActionResult EditAnswers(int id)
         {
+            //TODO: Pull users original answers
+            User currentUser = ORM.Users.Find(id);
+            ViewBag.CurrentUser = currentUser;
+            List<Question> found = ORM.Questions.Where(x=>x.UserID==id).ToList();
             return View();
         }
-        public ActionResult GameFinder(int gameID, int userID)
+
+        public ActionResult SaveQuestionChanges(int id, int question1, int question2, int question3, int question4, int question5)
+        {
+            Question editQ1 = new Question();
+            editQ1.UserID = id;
+            editQ1.ID = 1;
+            editQ1.Answer = question1;
+            ORM.Entry(editQ1).State = System.Data.Entity.EntityState.Modified;
+
+            Question editQ2 = new Question();
+            editQ2.UserID = id;
+            editQ2.ID = 2;
+            editQ2.Answer = question2;
+            ORM.Entry(editQ2).State = System.Data.Entity.EntityState.Modified;
+
+            Question editQ3 = new Question();
+            editQ3.UserID = id;
+            editQ3.ID = 3;
+            editQ3.Answer = question3;
+            ORM.Entry(editQ3).State = System.Data.Entity.EntityState.Modified;
+
+            Question editQ4 = new Question();
+            editQ4.UserID = id;
+            editQ4.ID = 4;
+            editQ4.Answer = question4;
+            ORM.Entry(editQ4).State = System.Data.Entity.EntityState.Modified;
+
+            Question editQ5 = new Question();
+            editQ5.UserID = id;
+            editQ5.ID = 5;
+            editQ5.Answer = question5;
+            ORM.Entry(editQ5).State = System.Data.Entity.EntityState.Modified;
+
+            ORM.SaveChanges();
+
+            return RedirectToAction("Index", new { id });
+        }
+         public ActionResult GameFinder(int gameID, int userID)
+
         {
             Game game = ORM.Games.Find(gameID);
             User user = ORM.Users.Find(userID);

@@ -1,0 +1,56 @@
+﻿
+@{
+    ViewBag.Title = "EditAnswers";
+}
+
+<h2>Change Your Answers</h2>
+
+<h2>Hello @ViewBag.CurrentUser.Name </h2>
+
+<br />
+<label>Question 1</label>
+<form action="/User/SaveQuestionChanges" method="post">
+    <input type="hidden" name="id" value="@ViewBag.CurrentUser.ID" />
+    <p>@*Filling the question for the time being*@Favorite Disney Princess</p>
+    <select name="question1">
+        <option value="1">Ariel</option>
+        <option value="2">Jasmine</option>
+        <option value="3">Belle</option>
+        <option value="4">Cinderella</option>
+        <option value="5">Mulan</option>
+    </select><br /><br />
+    <p>What Super Power do you have?</p>
+    <select name="question2">
+        <option value="1">Invisibility</option>
+        <option value="2">Flying</option>
+        <option value="3">Telekinesis</option>
+        <option value="4">Time Manipulation</option>
+        <option value="5">Healing</option>
+    </select><br /><br />
+    <p>Favorite Day Of The Week</p>
+    <select name="question3">
+        <option value="1">Monday</option>
+        <option value="2">Monday</option>
+        <option value="3">Monday</option>
+        <option value="4">Monday</option>
+        <option value="5">Monday</option>
+    </select><br /><br />
+    <p>Favorite Sport</p>
+    <select name="question4">
+        <option value="1">Shot Put</option>
+        <option value="2">Curling</option>
+        <option value="3">Egg Throwing</option>
+        <option value="4">Underwater Hockey</option>
+        <option value="5">Soccer</option>
+    </select><br /><br />
+    <p>What He-Man Villian Would you be?</p>
+    <select name="question5">
+        <option value="1">Skeletor</option>
+        <option value="2">Beast Man</option>
+        <option value="3">Evil Lyn</option>
+        <option value="4">Trap Jaw</option>
+        <option value="5">King Hiss</option>
+    </select><br /><br />
+    <input type="submit" value="Save Changes" />
+</form>
+

@@ -262,6 +262,7 @@
     <Content Include="Views\User\GameFinder.cshtml" />
     <Content Include="Views\User\Edit.cshtml" />
     <Content Include="Views\User\Questions.cshtml" />
+    <Content Include="Views\User\EditAnswers.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
