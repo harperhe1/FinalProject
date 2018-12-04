@@ -83,10 +83,17 @@ namespace GameAndChill.Controllers
         }
         public ActionResult EditAnswers(int id)
         {
+            List<Question> found = ORM.Questions.Where(x=>x.UserID==id).ToList();
+
+            if(found.Count == 0)
+            {
+                return RedirectToAction("Questions", new { id });
+            }
+            
             //TODO: Pull users original answers
             User currentUser = ORM.Users.Find(id);
             ViewBag.CurrentUser = currentUser;
-            List<Question> found = ORM.Questions.Where(x=>x.UserID==id).ToList();
+            
             return View();
         }
 
