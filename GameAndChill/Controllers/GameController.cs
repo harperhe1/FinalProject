@@ -19,8 +19,10 @@ namespace GameAndChill.Controllers
             ViewBag.GameInfo = TheWitcher;
             return View();
         }
-        public ActionResult Details()
+        public ActionResult Details(int id, int? UserID)
         {
+            ViewBag.Game = ORM.Games.Find(id);
+            ViewBag.User = ORM.Users.Find(UserID);
             return View();
         }
 

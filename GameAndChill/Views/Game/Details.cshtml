@@ -1,14 +1,37 @@
 ﻿@*Details of a specific game*@
-<h2>@*Game Title*@</h2>
+<h2>@ViewBag.Game.Name</h2>
+<p>Summary: @ViewBag.Game.Summary</p>
+<p>Genre:</p>
+<ul>
+    @foreach (var genre in @ViewBag.Game.Genres)
+    {
+        <li>@genre.Name</li>
+    }
+</ul>
+<p>Platform:</p>
+<ul>
+    @foreach (var platform in @ViewBag.Game.Platforms)
+    {
+        <li>@platform.Name</li>
+    }
+</ul>
+<a href="@ViewBag.Game.URL">Link to IGDB page</a>
+<p>Keyword:</p>
+<ul>
+    @foreach (var keyword in @ViewBag.Game.Keywords)
+    {
+        <li>@keyword.Name</li>
+    }
+</ul>
 
-<p>Name: @*Name*@</p>
-<p>Summary: @*Summary*@</p>
-<p>Genre: @*foreach Genre*@</p>
-<p>Keyword: @*foreach Keyword*@</p>
-<p>Platform: @*foreach Platform*@</p>
-<p>@*IGDB link*@</p>
+
+
+
+
 
 <a href="/User/Index">Back to User Home</a>
+
+
 
 
 

@@ -1,7 +1,7 @@
 ﻿
 <h2>Welcome, @ViewBag.CurrentUser.Name</h2>
 
-<table>
+<table class="table">
     <tr>
         <th>Game Name</th>
         <th>@*details*@</th>
@@ -9,6 +9,21 @@
         <th>@*IGDB link*@</th>
         <th>@*amazon link?*@</th>
     </tr>
+    @foreach(GameAndChill.Models.User_Game game in ViewBag.CurrentUser.User_Game)
+    {
+        if (game.IsLike == true)
+        {
+            <tr>
+                <td>
+                    @game.Game.Name
+                </td>
+                <td><a href="/Game/Details?id=@game.GameID&UserID=@ViewBag.CurrentUser.ID">Details</a></td>
+                <td>Remove</td>
+                <td>Link</td>
+                <td>LinkAM</td>
+            </tr>
+        }
+    }
     @*foreach: List of saved games*@
 </table>
 <a href="/User/GameFinder?userID=@ViewBag.CurrentUser.ID&gameID=1942">Find Game</a><br />
