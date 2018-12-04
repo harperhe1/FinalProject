@@ -93,6 +93,30 @@ namespace GameAndChill.Controllers
             ViewBag.CurrentUser = user;
             return View();
         }
+        public ActionResult LikeGame(bool isLike, int userID, int gameID)
+        {
+            User_Game found = ORM.User_Game.Find(userID, gameID);
+            if (found == null)
+            {
+                User_Game userGame = new User_Game();
+                userGame.UserID = userID;
+                userGame.GameID = gameID;
+                userGame.IsLike = isLike;
+                ORM.User_Game.Add(userGame);
+            }
+            else
+            {
+                found.IsLike = isLike;
+            }
+            ORM.SaveChanges();
+
+            string like = "";
+            if (isLike) { like = "liked"; }
+            else { like = "disliked"; }
+            TempData["IsLike"] = $"Added to {like} games";
+
+            return RedirectToAction("GameFinder", new { gameID, userID });
+        }
         //public ActionResult Delete()   Commented this line out for the time being. I don't think we need it -SR
         //{
         //    return View("Index", "Home");

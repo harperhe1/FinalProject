@@ -2,9 +2,12 @@
 <h2>GameFinder</h2>
 <a href="/User/Index?id=@ViewBag.CurrentUser.ID">Back to User Home</a>
 @*Details of a specific game*@
+@TempData["IsLike"]
 <h2>@ViewBag.GameDetails.Name</h2>
 <img src="http:@ViewBag.GameDetails.ImageURL" />
-@*Like*@ @*Dislike*@
+<input type="button" value="Like" onclick="location.href='@Url.Action("LikeGame","User", new { isLike = true, userID = ViewBag.CurrentUser.ID, gameID = ViewBag.GameDetails.ID })'" />
+<input type="button" value="Dislike" onclick="location.href='@Url.Action("LikeGame","User", new { isLike = false, userID = ViewBag.CurrentUser.ID, gameID = ViewBag.GameDetails.ID })'" />
+
 @*Next Game*@
 
 <p>Summary: @ViewBag.GameDetails.Summary</p>
