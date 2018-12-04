@@ -85,8 +85,12 @@ namespace GameAndChill.Controllers
         {
             return View();
         }
-        public ActionResult GameFinder()
+        public ActionResult GameFinder(int gameID, int userID)
         {
+            Game game = ORM.Games.Find(gameID);
+            User user = ORM.Users.Find(userID);
+            ViewBag.GameDetails = game;
+            ViewBag.CurrentUser = user;
             return View();
         }
         //public ActionResult Delete()   Commented this line out for the time being. I don't think we need it -SR

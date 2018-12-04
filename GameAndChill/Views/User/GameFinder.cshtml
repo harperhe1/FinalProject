@@ -1,18 +1,37 @@
 ﻿
 <h2>GameFinder</h2>
-
+<a href="/User/Index?id=@ViewBag.CurrentUser.ID">Back to User Home</a>
 @*Details of a specific game*@
-<h2>@*Game Title*@</h2>
-
-<p>Name: @*Name*@</p>
-<p>Summary: @*Summary*@</p>
-<p>Genre: @*foreach Genre*@</p>
-<p>Keyword: @*foreach Keyword*@</p>
-<p>Platform: @*foreach Platform*@</p>
-<p>@*IGDB link*@</p>
-
-
+<h2>@ViewBag.GameDetails.Name</h2>
+<img src="http:@ViewBag.GameDetails.ImageURL" />
 @*Like*@ @*Dislike*@
 @*Next Game*@
 
-<a href="/User/Index">Back to User Home</a>
+<p>Summary: @ViewBag.GameDetails.Summary</p>
+<p>Genre:</p>
+<ul>
+    @foreach (var genre in @ViewBag.GameDetails.Genres)
+    {
+        <li>@genre.Name</li>
+    }
+</ul>
+<p>Platform:</p>
+<ul>
+    @foreach (var platform in @ViewBag.GameDetails.Platforms)
+    {
+        <li>@platform.Name</li>
+    }
+</ul>
+<a href="@ViewBag.GameDetails.URL">Link to IGDB page</a>
+<p>Keyword:</p>
+<ul>
+    @foreach (var keyword in @ViewBag.GameDetails.Keywords)
+    {
+        <li>@keyword.Name</li>
+    }
+</ul>
+
+
+
+
+

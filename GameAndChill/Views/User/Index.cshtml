@@ -11,7 +11,7 @@
     </tr>
     @*foreach: List of saved games*@
 </table>
-<a href="/User/GameFinder">Find Game</a><br />
+<a href="/User/GameFinder?userID=@ViewBag.CurrentUser.ID&gameID=1942">Find Game</a><br />
 <a href="/User/Edit">Edit Answers</a><br />
 <a href="/User/DeleteUser?id=@ViewBag.CurrentUser.ID" onclick="return confirm('Are you sure you want to delete this user?')" class="btn-danger btn-sm" name="DeleteUser">Delete User</a><br />
 <a href="/Home/Index">Sign Out</a>
