@@ -35,17 +35,19 @@ namespace GameAndChill.Controllers
         public ActionResult SetGenreQuestions(int qID, int aID, IEnumerable<bool> GenreName)
         {
             List<bool> IsGenre = GenreName.ToList();
-            List<Genre> temp = ORM.Genres.ToList();
-            for(int i =0; i < IsGenre.Count() -1; i++)
+            List<Genre> Genres = ORM.Genres.ToList();
+            int temp = 0;
+            for(int i =0; i < Genres.Count(); i++)
             {
-                Question_Genre gQ = ORM.Question_Genre.Find(  qID,temp[i].ID, aID );
-                if (IsGenre[i])
+                Question_Genre gQ = ORM.Question_Genre.Find(  qID,Genres[i].ID, aID );
+                if (IsGenre[temp])
                 {
                     if(gQ == null)
                     {
-                        gQ = new Question_Genre { QuestionID = qID, GenreID = temp[i].ID, Answer = aID };
+                        gQ = new Question_Genre { QuestionID = qID, GenreID = Genres[i].ID, Answer = aID };
                         ORM.Question_Genre.Add(gQ);
                     }
+                    temp++;
                 }
                 else
                 {
@@ -54,6 +56,7 @@ namespace GameAndChill.Controllers
                         ORM.Question_Genre.Remove(gQ);
                     }
                 }
+            temp++;
             }
             ORM.SaveChanges();
             TempData["test"] = GenreName.Count();

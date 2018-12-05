@@ -10,7 +10,7 @@ Genre
     <input hidden value="@ViewBag.Question.ID" name="qID" />
     @for(int i =0; i < ViewBag.Genres.Count; i++)
     {
-        <lable>@ViewBag.Genres[i].Name @i</lable>
+        <lable>@ViewBag.Genres[i].Name</lable>
         @Html.CheckBox("GenreName");
         <br />
     }
