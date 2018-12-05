@@ -1,0 +1,21 @@
+﻿
+@{
+    ViewBag.Title = "GenreQuestions";
+}
+
+<h2>@ViewBag.Question.Name , @ViewBag.Answer</h2>
+Genre
+<form action="/Game/SetGenreQuestions" method="get">
+    <input hidden value="@ViewBag.Answer" name="aID" />
+    <input hidden value="@ViewBag.Question.ID" name="qID" />
+    @for(int i =0; i < ViewBag.Genres.Count; i++)
+    {
+        <lable>@ViewBag.Genres[i].Name @i</lable>
+        @Html.CheckBox("GenreName");
+        <br />
+    }
+    <input type="submit" value="Submit" />
+
+</form>
+
+

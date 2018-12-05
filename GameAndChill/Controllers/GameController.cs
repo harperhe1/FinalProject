@@ -15,8 +15,8 @@ namespace GameAndChill.Controllers
         // GET: Game
         public ActionResult Index()
         {
-            JObject TheWitcher = GetGameByID(1942);
-            ViewBag.GameInfo = TheWitcher;
+            /*JObject TheWitcher = GetGameByID(1942);
+            ViewBag.GameInfo = TheWitcher;*/
             return View();
         }
         public ActionResult Details(int id, int? UserID)
@@ -25,6 +25,41 @@ namespace GameAndChill.Controllers
             ViewBag.User = ORM.Users.Find(UserID);
             return View();
         }
+        public ActionResult GenreQuestions(int qID, int aID)
+        {
+            ViewBag.Question = ORM.Questions.Find(qID);
+            ViewBag.Genres = ORM.Genres.ToList();
+            ViewBag.Answer = aID;
+            return View();
+        }
+        public ActionResult SetGenreQuestions(int qID, int aID, IEnumerable<bool> GenreName)
+        {
+            List<bool> IsGenre = GenreName.ToList();
+            List<Genre> temp = ORM.Genres.ToList();
+            for(int i =0; i < IsGenre.Count() -1; i++)
+            {
+                Question_Genre gQ = ORM.Question_Genre.Find(  qID,temp[i].ID, aID );
+                if (IsGenre[i])
+                {
+                    if(gQ == null)
+                    {
+                        gQ = new Question_Genre { QuestionID = qID, GenreID = temp[i].ID, Answer = aID };
+                        ORM.Question_Genre.Add(gQ);
+                    }
+                }
+                else
+                {
+                    if(gQ != null)
+                    {
+                        ORM.Question_Genre.Remove(gQ);
+                    }
+                }
+            }
+            ORM.SaveChanges();
+            TempData["test"] = GenreName.Count();
+            return RedirectToAction("Index");
+        }
+        
 
         string APIKey = System.Configuration.ConfigurationManager.AppSettings["user-key"];
         GameAndChillDBEntities ORM = new GameAndChillDBEntities();

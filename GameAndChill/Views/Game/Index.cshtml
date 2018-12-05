@@ -1,14 +1,17 @@
 ﻿<ul>
+    <li>
+        @TempData["test"];
+    </li>
     @*Example of Game Details*@
     
-    <li>ID: @ViewBag.GameInfo["id"]</li>
+    @*<li>ID: @ViewBag.GameInfo["id"]</li>
     <li>Name: @ViewBag.GameInfo["name"]</li>
     <li>Summary: @ViewBag.GameInfo["summary"]</li>
-    <li><img src="http:@ViewBag.GameInfo["cover"]["url"]"/></li>
-    <li>
+    <li><img src="http:@ViewBag.GameInfo["cover"]["url"]"/></li>*@
+    @*<li>
         <a href="/Game/AddGameToDB?id=@ViewBag.GameInfo["id"]">Add to DB</a>
         
-    </li>
+    </li>*@
     <li>
         <a href="/Game/AddGenresToDB">Add Genres to DB</a>
     </li>
