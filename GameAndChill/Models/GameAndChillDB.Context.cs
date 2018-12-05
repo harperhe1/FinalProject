@@ -32,6 +32,7 @@ namespace GameAndChill.Models
         public virtual DbSet<User_Game> User_Game { get; set; }
         public virtual DbSet<User> Users { get; set; }
         public virtual DbSet<Answer> Answers { get; set; }
+        public virtual DbSet<Question_Genre> Question_Genre { get; set; }
         public virtual DbSet<Question> Questions { get; set; }
     }
 }

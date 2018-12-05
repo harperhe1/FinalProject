@@ -1,4 +1,4 @@
-﻿// T4 code generation is enabled for model 'C:\Users\8bitm\OneDrive\Desktop\FinalProject\GameAndChill\Models\GameAndChillDB.edmx'. 
+﻿// T4 code generation is enabled for model 'C:\Users\Nicholas Laptop\Desktop\Final\GameAndChill\Models\GameAndChillDB.edmx'. 
 // To enable legacy code generation, change the value of the 'Code Generation Strategy' designer
 // property to 'Legacy ObjectContext'. This property is available in the Properties Window when the model
 // is open in the designer.

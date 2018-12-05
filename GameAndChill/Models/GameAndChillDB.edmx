@@ -73,9 +73,11 @@
           <Key>
             <PropertyRef Name="QuestionID" />
             <PropertyRef Name="GenreID" />
+            <PropertyRef Name="Answer" />
           </Key>
           <Property Name="QuestionID" Type="int" Nullable="false" />
           <Property Name="GenreID" Type="int" Nullable="false" />
+          <Property Name="Answer" Type="int" Nullable="false" />
         </EntityType>
         <EntityType Name="Questions">
           <Key>
@@ -196,7 +198,7 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK__Question___Genre__1CBC4616">
+        <Association Name="FK__Question___Genre__2A164134">
           <End Role="Genres" Type="Self.Genres" Multiplicity="1" />
           <End Role="Question_Genre" Type="Self.Question_Genre" Multiplicity="*" />
           <ReferentialConstraint>
@@ -208,7 +210,7 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK__Question___Quest__1BC821DD">
+        <Association Name="FK__Question___Quest__29221CFB">
           <End Role="Questions" Type="Self.Questions" Multiplicity="1" />
           <End Role="Question_Genre" Type="Self.Question_Genre" Multiplicity="*" />
           <ReferentialConstraint>
@@ -289,11 +291,11 @@
             <End Role="Platforms" EntitySet="Platforms" />
             <End Role="Platform_Game" EntitySet="Platform_Game" />
           </AssociationSet>
-          <AssociationSet Name="FK__Question___Genre__1CBC4616" Association="Self.FK__Question___Genre__1CBC4616">
+          <AssociationSet Name="FK__Question___Genre__2A164134" Association="Self.FK__Question___Genre__2A164134">
             <End Role="Genres" EntitySet="Genres" />
             <End Role="Question_Genre" EntitySet="Question_Genre" />
           </AssociationSet>
-          <AssociationSet Name="FK__Question___Quest__1BC821DD" Association="Self.FK__Question___Quest__1BC821DD">
+          <AssociationSet Name="FK__Question___Quest__29221CFB" Association="Self.FK__Question___Quest__29221CFB">
             <End Role="Questions" EntitySet="Questions" />
             <End Role="Question_Genre" EntitySet="Question_Genre" />
           </AssociationSet>
@@ -331,7 +333,7 @@
           <Property Name="ID" Type="Int32" Nullable="false" />
           <Property Name="Name" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
           <NavigationProperty Name="Games" Relationship="Self.Genre_Game" FromRole="Genres" ToRole="Games" />
-          <NavigationProperty Name="Questions" Relationship="GameAndChillDBModel.Question_Genre" FromRole="Genre" ToRole="Question" />
+          <NavigationProperty Name="Question_Genre" Relationship="GameAndChillDBModel.FK__Question___Genre__2A164134" FromRole="Genre" ToRole="Question_Genre" />
         </EntityType>
         <EntityType Name="Keyword">
           <Key>
@@ -437,16 +439,21 @@
             <End Role="User" EntitySet="Users" />
             <End Role="Answer" EntitySet="Answers" />
           </AssociationSet>
+          <EntitySet Name="Question_Genre" EntityType="GameAndChillDBModel.Question_Genre" />
           <EntitySet Name="Questions" EntityType="GameAndChillDBModel.Question" />
           <AssociationSet Name="FK__Answers__Questio__17F790F9" Association="GameAndChillDBModel.FK__Answers__Questio__17F790F9">
             <End Role="Question" EntitySet="Questions" />
             <End Role="Answer" EntitySet="Answers" />
           </AssociationSet>
-          <AssociationSet Name="Question_Genre" Association="GameAndChillDBModel.Question_Genre">
+          <AssociationSet Name="FK__Question___Genre__2A164134" Association="GameAndChillDBModel.FK__Question___Genre__2A164134">
             <End Role="Genre" EntitySet="Genres" />
-            <End Role="Question" EntitySet="Questions" />
+            <End Role="Question_Genre" EntitySet="Question_Genre" />
           </AssociationSet>
-        </EntityContainer>
+          <AssociationSet Name="FK__Question___Quest__29221CFB" Association="GameAndChillDBModel.FK__Question___Quest__29221CFB">
+            <End Role="Question" EntitySet="Questions" />
+            <End Role="Question_Genre" EntitySet="Question_Genre" />
+          </AssociationSet>
+          </EntityContainer>
         <EntityType Name="Answer">
           <Key>
             <PropertyRef Name="QuestionID" />
@@ -470,6 +477,18 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <EntityType Name="Question_Genre">
+          <Key>
+            <PropertyRef Name="QuestionID" />
+            <PropertyRef Name="GenreID" />
+            <PropertyRef Name="Answer" />
+          </Key>
+          <Property Name="QuestionID" Type="Int32" Nullable="false" />
+          <Property Name="GenreID" Type="Int32" Nullable="false" />
+          <Property Name="Answer" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Genre" Relationship="GameAndChillDBModel.FK__Question___Genre__2A164134" FromRole="Question_Genre" ToRole="Genre" />
+          <NavigationProperty Name="Question" Relationship="GameAndChillDBModel.FK__Question___Quest__29221CFB" FromRole="Question_Genre" ToRole="Question" />
+        </EntityType>
         <EntityType Name="Question">
           <Key>
             <PropertyRef Name="ID" />
@@ -477,7 +496,7 @@
           <Property Name="ID" Type="Int32" Nullable="false" />
           <Property Name="Name" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="true" />
           <NavigationProperty Name="Answers" Relationship="GameAndChillDBModel.FK__Answers__Questio__17F790F9" FromRole="Question" ToRole="Answer" />
-          <NavigationProperty Name="Genres" Relationship="GameAndChillDBModel.Question_Genre" FromRole="Question" ToRole="Genre" />
+          <NavigationProperty Name="Question_Genre" Relationship="GameAndChillDBModel.FK__Question___Quest__29221CFB" FromRole="Question" ToRole="Question_Genre" />
         </EntityType>
         <Association Name="FK__Answers__Questio__17F790F9">
           <End Type="GameAndChillDBModel.Question" Role="Question" Multiplicity="1" />
@@ -491,11 +510,31 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="Question_Genre">
-          <End Type="GameAndChillDBModel.Genre" Role="Genre" Multiplicity="*" />
-          <End Type="GameAndChillDBModel.Question" Role="Question" Multiplicity="*" />
+        <Association Name="FK__Question___Genre__2A164134">
+          <End Type="GameAndChillDBModel.Genre" Role="Genre" Multiplicity="1" />
+          <End Type="GameAndChillDBModel.Question_Genre" Role="Question_Genre" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Genre">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="Question_Genre">
+              <PropertyRef Name="GenreID" />
+            </Dependent>
+          </ReferentialConstraint>
         </Association>
-      </Schema>
+        <Association Name="FK__Question___Quest__29221CFB">
+          <End Type="GameAndChillDBModel.Question" Role="Question" Multiplicity="1" />
+          <End Type="GameAndChillDBModel.Question_Genre" Role="Question_Genre" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Question">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="Question_Genre">
+              <PropertyRef Name="QuestionID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
     <edmx:Mappings>
@@ -586,6 +625,15 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
+          <EntitySetMapping Name="Question_Genre">
+            <EntityTypeMapping TypeName="GameAndChillDBModel.Question_Genre">
+              <MappingFragment StoreEntitySet="Question_Genre">
+                <ScalarProperty Name="Answer" ColumnName="Answer" />
+                <ScalarProperty Name="GenreID" ColumnName="GenreID" />
+                <ScalarProperty Name="QuestionID" ColumnName="QuestionID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
           <EntitySetMapping Name="Questions">
             <EntityTypeMapping TypeName="GameAndChillDBModel.Question">
               <MappingFragment StoreEntitySet="Questions">
@@ -594,15 +642,7 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <AssociationSetMapping Name="Question_Genre" TypeName="GameAndChillDBModel.Question_Genre" StoreEntitySet="Question_Genre">
-            <EndProperty Name="Question">
-              <ScalarProperty Name="ID" ColumnName="QuestionID" />
-            </EndProperty>
-            <EndProperty Name="Genre">
-              <ScalarProperty Name="ID" ColumnName="GenreID" />
-            </EndProperty>
-          </AssociationSetMapping>
-        </EntityContainerMapping>
+          </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>
   </edmx:Runtime>

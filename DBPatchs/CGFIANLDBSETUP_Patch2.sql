@@ -15,7 +15,8 @@ GO
 create table GameAndChillDB.dbo.Question_Genre(
 	QuestionID int foreign key references GameAndChillDB.dbo.Questions(ID) not null,
 	GenreID int foreign key references GameAndChillDB.dbo.Genres(ID) not null,
-	Constraint PK_Question_Genre primary key(QuestionID,GenreID)
+	Answer int not null,
+	Constraint PK_Question_Genre primary key(Answer,QuestionID,GenreID)
 )
 GO
 

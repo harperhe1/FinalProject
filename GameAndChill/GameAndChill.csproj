@@ -195,6 +195,9 @@
     <Compile Include="Models\Question.cs">
       <DependentUpon>GameAndChillDB.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\Question_Genre.cs">
+      <DependentUpon>GameAndChillDB.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\User.cs">
       <DependentUpon>GameAndChillDB.tt</DependentUpon>
     </Compile>

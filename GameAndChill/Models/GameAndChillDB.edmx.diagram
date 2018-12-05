@@ -18,10 +18,12 @@
         <AssociationConnector Association="GameAndChillDBModel.Platform_Game" ManuallyRouted="false" />
         <EntityTypeShape EntityType="GameAndChillDBModel.Answer" Width="1.5" PointX="8.25" PointY="1.625" />
         <AssociationConnector Association="GameAndChillDBModel.FK__Answers__UserID__18EBB532" />
-        <EntityTypeShape EntityType="GameAndChillDBModel.Question" Width="1.5" PointX="6" PointY="3.375" />
+        <EntityTypeShape EntityType="GameAndChillDBModel.Question_Genre" Width="1.5" PointX="5.875" PointY="3.375" />
+        <EntityTypeShape EntityType="GameAndChillDBModel.Question" Width="1.5" PointX="8" PointY="4.25" />
         <AssociationConnector Association="GameAndChillDBModel.FK__Answers__Questio__17F790F9" />
-        <AssociationConnector Association="GameAndChillDBModel.Question_Genre" />
-      </Diagram>
+        <AssociationConnector Association="GameAndChillDBModel.FK__Question___Genre__2A164134" />
+        <AssociationConnector Association="GameAndChillDBModel.FK__Question___Quest__29221CFB" />
+        </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>
 </edmx:Edmx>
