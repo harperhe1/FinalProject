@@ -29,8 +29,9 @@ namespace GameAndChill.Models
         public virtual DbSet<Genre> Genres { get; set; }
         public virtual DbSet<Keyword> Keywords { get; set; }
         public virtual DbSet<Platform> Platforms { get; set; }
-        public virtual DbSet<Question> Questions { get; set; }
         public virtual DbSet<User_Game> User_Game { get; set; }
         public virtual DbSet<User> Users { get; set; }
+        public virtual DbSet<Answer> Answers { get; set; }
+        public virtual DbSet<Question> Questions { get; set; }
     }
 }
