@@ -1,0 +1,24 @@
+﻿
+@{
+    ViewBag.Title = "EditGenres";
+}
+
+<h2>Edit Genres</h2>
+
+<form action="/Game/GenreQuestions" method="post">
+   <select name="qID">
+       @foreach (var question in @ViewBag.Questions)
+       {
+           <option value="@question.ID">@question.Name</option>
+
+       }
+   </select>
+    <select name="aID">
+        <option value="1">1</option>
+        <option value="2">2</option>
+        <option value="3">3</option>
+        <option value="4">4</option>
+        <option value="5">5</option>
+    </select>
+    <input type="submit" value="Set Genres" />
+</form>

@@ -330,6 +330,12 @@ namespace GameAndChill.Controllers
             // return null if something goes wrong with the request/response
             return null;
         }
+
+        public ActionResult EditGenres()
+        {
+            ViewBag.Questions = ORM.Questions.ToList();
+            return View();
+        }
     
     }
 }

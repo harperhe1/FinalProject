@@ -270,6 +270,7 @@
     <Content Include="Views\User\Questions.cshtml" />
     <Content Include="Views\User\EditAnswers.cshtml" />
     <Content Include="Views\Game\GenreQuestions.cshtml" />
+    <Content Include="Views\Game\EditGenres.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
