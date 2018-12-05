@@ -15,8 +15,8 @@ namespace GameAndChill.Controllers
         // GET: Game
         public ActionResult Index()
         {
-            /*JObject TheWitcher = GetGameByID(1942);
-            ViewBag.GameInfo = TheWitcher;*/
+            JObject TheWitcher = GetGameByID(1234);
+            ViewBag.GameInfo = TheWitcher;
             return View();
         }
         public ActionResult Details(int id, int? UserID)
