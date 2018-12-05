@@ -238,5 +238,60 @@ namespace GameAndChill.Controllers
             // result message
             TempData["Added"] = $"Added {g.Name} to the database";
         }
+
+        public ActionResult AddGenresToDB()
+        {
+            string ids = "";
+            for (int i = 0; i < 34; i++)
+            {
+                ids = ids + i;
+                if (i != 33)
+                {
+                    ids = ids + ",";
+                }
+            }
+            //make our resquest
+            HttpWebRequest request = WebRequest.CreateHttp($"https://api-endpoint.igdb.com/genres/{ids}?fields=id,name");
+
+            request.Headers.Add("user-key", APIKey);
+            request.Accept = "application/json";
+            //make our response
+            HttpWebResponse response = (HttpWebResponse)request.GetResponse();
+
+            if (response.StatusCode == HttpStatusCode.OK)
+            {
+                //get response stream
+                StreamReader reader = new StreamReader(response.GetResponseStream());
+
+                //read response stream as string
+                string output = reader.ReadToEnd();
+
+                //convert response to JSon
+                JArray GenreInfo = JArray.Parse(output);
+                reader.Close();
+
+                foreach (JObject genre in GenreInfo)
+                {
+                    if(ORM.Genres.Find(genre["id"].Value<int>()) == null)
+                    {
+                        if(genre["name"] == null)
+                        {
+                            continue;
+                        }
+                        Genre newGenre = new Genre();
+                        newGenre.ID = genre["id"].Value<int>();
+                        newGenre.Name = genre["name"].Value<string>();
+                        ORM.Genres.Add(newGenre);
+                    }
+                }
+
+                ORM.SaveChanges();
+                TempData["Added"] = "Added Genre to Database";
+                return RedirectToAction("Index", "Home");
+            }
+            // return null if something goes wrong with the request/response
+            return null;
+        }
+    
     }
 }
