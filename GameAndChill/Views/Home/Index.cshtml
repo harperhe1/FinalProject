@@ -1,10 +1,13 @@
 ﻿@TempData["Added"]
 @TempData["Eulogy"]
-<a href="/User/SignUp">Add User</a>
 <br />
+<h3>Welcome to @*Will upload image here when the time comes*@ ConSoul.Find(Game)</h3>
+<br/>
+<a href="/User/SignUp">Add User</a>
+<br/>
 <h2>List Of Users</h2>
 <ul>
-    @foreach(dynamic user in ViewBag.Users)
+    @foreach (dynamic user in ViewBag.Users)
     {
         <li><a href="/User/Index?id=@user.ID">@user.Name</a></li>
     }
