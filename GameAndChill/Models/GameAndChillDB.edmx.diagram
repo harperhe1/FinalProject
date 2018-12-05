@@ -21,7 +21,12 @@
         <EntityTypeShape EntityType="GameAndChillDBModel.Question_Genre" Width="1.5" PointX="5.875" PointY="3.375" />
         <EntityTypeShape EntityType="GameAndChillDBModel.Question" Width="1.5" PointX="8" PointY="4.25" />
         <AssociationConnector Association="GameAndChillDBModel.FK__Answers__Questio__17F790F9" />
-        <AssociationConnector Association="GameAndChillDBModel.FK__Question___Genre__2A164134" />
+        <AssociationConnector Association="GameAndChillDBModel.FK__Question___Genre__2A164134" ManuallyRouted="true" >
+          <ConnectorPoint PointX="4.5" PointY="4.3939925130208328" />
+          <ConnectorPoint PointX="4.822916666666667" PointY="4.3939925130208319" />
+          <ConnectorPoint PointX="4.989583333333333" PointY="4.3939925130208328" />
+          <ConnectorPoint PointX="5.875" PointY="4.3939925130208328" />
+        </AssociationConnector>
         <AssociationConnector Association="GameAndChillDBModel.FK__Question___Quest__29221CFB" />
         </Diagram>
     </edmx:Diagrams>
