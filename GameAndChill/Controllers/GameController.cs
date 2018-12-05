@@ -30,6 +30,19 @@ namespace GameAndChill.Controllers
             ViewBag.Question = ORM.Questions.Find(qID);
             ViewBag.Genres = ORM.Genres.ToList();
             ViewBag.Answer = aID;
+            List<bool> Checked = new List<bool>();
+            foreach( var genre in ORM.Genres)
+            {
+                if(genre.Question_Genre.Where(x => x.QuestionID == qID && x.Answer == aID).Count() != 0)
+                {
+                    Checked.Add(true);
+                }
+                else
+                {
+                    Checked.Add(false);
+                }
+            }
+            ViewBag.IsChecked = Checked;
             return View();
         }
         public ActionResult SetGenreQuestions(int qID, int aID, IEnumerable<bool> GenreName)
