@@ -14,10 +14,19 @@ namespace GameAndChill.Models
     
     public partial class Question
     {
-        public int ID { get; set; }
-        public int UserID { get; set; }
-        public Nullable<int> Answer { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
+        public Question()
+        {
+            this.Answers = new HashSet<Answer>();
+            this.Question_Genre = new HashSet<Question_Genre>();
+        }
     
-        public virtual User User { get; set; }
+        public int ID { get; set; }
+        public string Name { get; set; }
+    
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<Answer> Answers { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<Question_Genre> Question_Genre { get; set; }
     }
 }

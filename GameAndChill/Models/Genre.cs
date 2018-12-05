@@ -18,6 +18,7 @@ namespace GameAndChill.Models
         public Genre()
         {
             this.Games = new HashSet<Game>();
+            this.Question_Genre = new HashSet<Question_Genre>();
         }
     
         public int ID { get; set; }
@@ -25,5 +26,7 @@ namespace GameAndChill.Models
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Game> Games { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<Question_Genre> Question_Genre { get; set; }
     }
 }

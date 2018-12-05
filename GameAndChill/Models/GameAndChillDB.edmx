@@ -5,6 +5,15 @@
     <!-- SSDL content -->
     <edmx:StorageModels>
     <Schema Namespace="GameAndChillDBModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="Answers">
+          <Key>
+            <PropertyRef Name="QuestionID" />
+            <PropertyRef Name="UserID" />
+          </Key>
+          <Property Name="QuestionID" Type="int" Nullable="false" />
+          <Property Name="UserID" Type="int" Nullable="false" />
+          <Property Name="Answer" Type="int" />
+        </EntityType>
         <EntityType Name="Games">
           <Key>
             <PropertyRef Name="ID" />
@@ -60,14 +69,22 @@
           <Property Name="ID" Type="int" Nullable="false" />
           <Property Name="Name" Type="nvarchar" MaxLength="50" Nullable="false" />
         </EntityType>
+        <EntityType Name="Question_Genre">
+          <Key>
+            <PropertyRef Name="QuestionID" />
+            <PropertyRef Name="GenreID" />
+            <PropertyRef Name="Answer" />
+          </Key>
+          <Property Name="QuestionID" Type="int" Nullable="false" />
+          <Property Name="GenreID" Type="int" Nullable="false" />
+          <Property Name="Answer" Type="int" Nullable="false" />
+        </EntityType>
         <EntityType Name="Questions">
           <Key>
             <PropertyRef Name="ID" />
-            <PropertyRef Name="UserID" />
           </Key>
           <Property Name="ID" Type="int" Nullable="false" />
-          <Property Name="UserID" Type="int" Nullable="false" />
-          <Property Name="Answer" Type="int" />
+          <Property Name="Name" Type="nvarchar" MaxLength="100" Nullable="false" />
         </EntityType>
         <EntityType Name="User_Game">
           <Key>
@@ -85,6 +102,30 @@
           <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="Name" Type="nvarchar" MaxLength="50" Nullable="false" />
         </EntityType>
+        <Association Name="FK__Answers__Questio__17F790F9">
+          <End Role="Questions" Type="Self.Questions" Multiplicity="1" />
+          <End Role="Answers" Type="Self.Answers" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Questions">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="Answers">
+              <PropertyRef Name="QuestionID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Answers__UserID__18EBB532">
+          <End Role="Users" Type="Self.Users" Multiplicity="1" />
+          <End Role="Answers" Type="Self.Answers" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Users">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="Answers">
+              <PropertyRef Name="UserID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK__Genre_Gam__GameI__01142BA1">
           <End Role="Games" Type="Self.Games" Multiplicity="1" />
           <End Role="Genre_Game" Type="Self.Genre_Game" Multiplicity="*" />
@@ -157,15 +198,27 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK__Questions__UserI__797309D9">
-          <End Role="Users" Type="Self.Users" Multiplicity="1" />
-          <End Role="Questions" Type="Self.Questions" Multiplicity="*" />
+        <Association Name="FK__Question___Genre__2A164134">
+          <End Role="Genres" Type="Self.Genres" Multiplicity="1" />
+          <End Role="Question_Genre" Type="Self.Question_Genre" Multiplicity="*" />
           <ReferentialConstraint>
-            <Principal Role="Users">
+            <Principal Role="Genres">
               <PropertyRef Name="ID" />
             </Principal>
-            <Dependent Role="Questions">
-              <PropertyRef Name="UserID" />
+            <Dependent Role="Question_Genre">
+              <PropertyRef Name="GenreID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Question___Quest__29221CFB">
+          <End Role="Questions" Type="Self.Questions" Multiplicity="1" />
+          <End Role="Question_Genre" Type="Self.Question_Genre" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Questions">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="Question_Genre">
+              <PropertyRef Name="QuestionID" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -194,6 +247,7 @@
           </ReferentialConstraint>
         </Association>
         <EntityContainer Name="GameAndChillDBModelStoreContainer">
+          <EntitySet Name="Answers" EntityType="Self.Answers" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Games" EntityType="Self.Games" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Genre_Game" EntityType="Self.Genre_Game" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Genres" EntityType="Self.Genres" Schema="dbo" store:Type="Tables" />
@@ -201,9 +255,18 @@
           <EntitySet Name="Keywords" EntityType="Self.Keywords" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Platform_Game" EntityType="Self.Platform_Game" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Platforms" EntityType="Self.Platforms" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Question_Genre" EntityType="Self.Question_Genre" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Questions" EntityType="Self.Questions" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="User_Game" EntityType="Self.User_Game" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Users" EntityType="Self.Users" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK__Answers__Questio__17F790F9" Association="Self.FK__Answers__Questio__17F790F9">
+            <End Role="Questions" EntitySet="Questions" />
+            <End Role="Answers" EntitySet="Answers" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Answers__UserID__18EBB532" Association="Self.FK__Answers__UserID__18EBB532">
+            <End Role="Users" EntitySet="Users" />
+            <End Role="Answers" EntitySet="Answers" />
+          </AssociationSet>
           <AssociationSet Name="FK__Genre_Gam__GameI__01142BA1" Association="Self.FK__Genre_Gam__GameI__01142BA1">
             <End Role="Games" EntitySet="Games" />
             <End Role="Genre_Game" EntitySet="Genre_Game" />
@@ -228,9 +291,13 @@
             <End Role="Platforms" EntitySet="Platforms" />
             <End Role="Platform_Game" EntitySet="Platform_Game" />
           </AssociationSet>
-          <AssociationSet Name="FK__Questions__UserI__797309D9" Association="Self.FK__Questions__UserI__797309D9">
-            <End Role="Users" EntitySet="Users" />
+          <AssociationSet Name="FK__Question___Genre__2A164134" Association="Self.FK__Question___Genre__2A164134">
+            <End Role="Genres" EntitySet="Genres" />
+            <End Role="Question_Genre" EntitySet="Question_Genre" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Question___Quest__29221CFB" Association="Self.FK__Question___Quest__29221CFB">
             <End Role="Questions" EntitySet="Questions" />
+            <End Role="Question_Genre" EntitySet="Question_Genre" />
           </AssociationSet>
           <AssociationSet Name="FK__User_Game__GameI__7D439ABD" Association="Self.FK__User_Game__GameI__7D439ABD">
             <End Role="Games" EntitySet="Games" />
@@ -266,6 +333,7 @@
           <Property Name="ID" Type="Int32" Nullable="false" />
           <Property Name="Name" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
           <NavigationProperty Name="Games" Relationship="Self.Genre_Game" FromRole="Genres" ToRole="Games" />
+          <NavigationProperty Name="Question_Genre" Relationship="GameAndChillDBModel.FK__Question___Genre__2A164134" FromRole="Genre" ToRole="Question_Genre" />
         </EntityType>
         <EntityType Name="Keyword">
           <Key>
@@ -282,16 +350,6 @@
           <Property Name="ID" Type="Int32" Nullable="false" />
           <Property Name="Name" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
           <NavigationProperty Name="Games" Relationship="Self.Platform_Game" FromRole="Platforms" ToRole="Games" />
-        </EntityType>
-        <EntityType Name="Question">
-          <Key>
-            <PropertyRef Name="ID" />
-            <PropertyRef Name="UserID" />
-          </Key>
-          <Property Name="ID" Type="Int32" Nullable="false" />
-          <Property Name="UserID" Type="Int32" Nullable="false" />
-          <Property Name="Answer" Type="Int32" />
-          <NavigationProperty Name="User" Relationship="Self.FK__Questions__UserI__412EB0B6" FromRole="Questions" ToRole="Users" />
         </EntityType>
         <EntityType Name="User_Game">
           <Key>
@@ -310,8 +368,8 @@
           </Key>
           <Property Name="ID" Type="Int32" Nullable="false" />
           <Property Name="Name" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
-          <NavigationProperty Name="Questions" Relationship="Self.FK__Questions__UserI__412EB0B6" FromRole="Users" ToRole="Questions" />
           <NavigationProperty Name="User_Game" Relationship="Self.FK__User_Game__UserI__440B1D61" FromRole="Users" ToRole="User_Game" />
+          <NavigationProperty Name="Answers" Relationship="GameAndChillDBModel.FK__Answers__UserID__18EBB532" FromRole="User" ToRole="Answer" />
         </EntityType>
         <Association Name="FK__User_Game__GameI__44FF419A">
           <End Role="Games" Type="Self.Game" Multiplicity="1" />
@@ -322,18 +380,6 @@
             </Principal>
             <Dependent Role="User_Game">
               <PropertyRef Name="GameID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK__Questions__UserI__412EB0B6">
-          <End Role="Users" Type="Self.User" Multiplicity="1" />
-          <End Role="Questions" Type="Self.Question" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Users">
-              <PropertyRef Name="ID" />
-            </Principal>
-            <Dependent Role="Questions">
-              <PropertyRef Name="UserID" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -366,16 +412,11 @@
           <EntitySet Name="Genres" EntityType="Self.Genre" />
           <EntitySet Name="Keywords" EntityType="Self.Keyword" />
           <EntitySet Name="Platforms" EntityType="Self.Platform" />
-          <EntitySet Name="Questions" EntityType="Self.Question" />
           <EntitySet Name="User_Game" EntityType="Self.User_Game" />
           <EntitySet Name="Users" EntityType="Self.User" />
           <AssociationSet Name="FK__User_Game__GameI__44FF419A" Association="Self.FK__User_Game__GameI__44FF419A">
             <End Role="Games" EntitySet="Games" />
             <End Role="User_Game" EntitySet="User_Game" />
-          </AssociationSet>
-          <AssociationSet Name="FK__Questions__UserI__412EB0B6" Association="Self.FK__Questions__UserI__412EB0B6">
-            <End Role="Users" EntitySet="Users" />
-            <End Role="Questions" EntitySet="Questions" />
           </AssociationSet>
           <AssociationSet Name="FK__User_Game__UserI__440B1D61" Association="Self.FK__User_Game__UserI__440B1D61">
             <End Role="Users" EntitySet="Users" />
@@ -393,8 +434,107 @@
             <End Role="Games" EntitySet="Games" />
             <End Role="Platforms" EntitySet="Platforms" />
           </AssociationSet>
-        </EntityContainer>
-      </Schema>
+          <EntitySet Name="Answers" EntityType="GameAndChillDBModel.Answer" />
+          <AssociationSet Name="FK__Answers__UserID__18EBB532" Association="GameAndChillDBModel.FK__Answers__UserID__18EBB532">
+            <End Role="User" EntitySet="Users" />
+            <End Role="Answer" EntitySet="Answers" />
+          </AssociationSet>
+          <EntitySet Name="Question_Genre" EntityType="GameAndChillDBModel.Question_Genre" />
+          <EntitySet Name="Questions" EntityType="GameAndChillDBModel.Question" />
+          <AssociationSet Name="FK__Answers__Questio__17F790F9" Association="GameAndChillDBModel.FK__Answers__Questio__17F790F9">
+            <End Role="Question" EntitySet="Questions" />
+            <End Role="Answer" EntitySet="Answers" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Question___Genre__2A164134" Association="GameAndChillDBModel.FK__Question___Genre__2A164134">
+            <End Role="Genre" EntitySet="Genres" />
+            <End Role="Question_Genre" EntitySet="Question_Genre" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Question___Quest__29221CFB" Association="GameAndChillDBModel.FK__Question___Quest__29221CFB">
+            <End Role="Question" EntitySet="Questions" />
+            <End Role="Question_Genre" EntitySet="Question_Genre" />
+          </AssociationSet>
+          </EntityContainer>
+        <EntityType Name="Answer">
+          <Key>
+            <PropertyRef Name="QuestionID" />
+            <PropertyRef Name="UserID" />
+          </Key>
+          <Property Name="QuestionID" Type="Int32" Nullable="false" />
+          <Property Name="UserID" Type="Int32" Nullable="false" />
+          <Property Name="Answer1" Type="Int32" />
+          <NavigationProperty Name="User" Relationship="GameAndChillDBModel.FK__Answers__UserID__18EBB532" FromRole="Answer" ToRole="User" />
+          <NavigationProperty Name="Question" Relationship="GameAndChillDBModel.FK__Answers__Questio__17F790F9" FromRole="Answer" ToRole="Question" />
+        </EntityType>
+        <Association Name="FK__Answers__UserID__18EBB532">
+          <End Type="GameAndChillDBModel.User" Role="User" Multiplicity="1" />
+          <End Type="GameAndChillDBModel.Answer" Role="Answer" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="User">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="Answer">
+              <PropertyRef Name="UserID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="Question_Genre">
+          <Key>
+            <PropertyRef Name="QuestionID" />
+            <PropertyRef Name="GenreID" />
+            <PropertyRef Name="Answer" />
+          </Key>
+          <Property Name="QuestionID" Type="Int32" Nullable="false" />
+          <Property Name="GenreID" Type="Int32" Nullable="false" />
+          <Property Name="Answer" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Genre" Relationship="GameAndChillDBModel.FK__Question___Genre__2A164134" FromRole="Question_Genre" ToRole="Genre" />
+          <NavigationProperty Name="Question" Relationship="GameAndChillDBModel.FK__Question___Quest__29221CFB" FromRole="Question_Genre" ToRole="Question" />
+        </EntityType>
+        <EntityType Name="Question">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" />
+          <Property Name="Name" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="Answers" Relationship="GameAndChillDBModel.FK__Answers__Questio__17F790F9" FromRole="Question" ToRole="Answer" />
+          <NavigationProperty Name="Question_Genre" Relationship="GameAndChillDBModel.FK__Question___Quest__29221CFB" FromRole="Question" ToRole="Question_Genre" />
+        </EntityType>
+        <Association Name="FK__Answers__Questio__17F790F9">
+          <End Type="GameAndChillDBModel.Question" Role="Question" Multiplicity="1" />
+          <End Type="GameAndChillDBModel.Answer" Role="Answer" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Question">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="Answer">
+              <PropertyRef Name="QuestionID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Question___Genre__2A164134">
+          <End Type="GameAndChillDBModel.Genre" Role="Genre" Multiplicity="1" />
+          <End Type="GameAndChillDBModel.Question_Genre" Role="Question_Genre" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Genre">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="Question_Genre">
+              <PropertyRef Name="GenreID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Question___Quest__29221CFB">
+          <End Type="GameAndChillDBModel.Question" Role="Question" Multiplicity="1" />
+          <End Type="GameAndChillDBModel.Question_Genre" Role="Question_Genre" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Question">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="Question_Genre">
+              <PropertyRef Name="QuestionID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
     <edmx:Mappings>
@@ -432,15 +572,6 @@
               <MappingFragment StoreEntitySet="Platforms">
                 <ScalarProperty Name="ID" ColumnName="ID" />
                 <ScalarProperty Name="Name" ColumnName="Name" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="Questions">
-            <EntityTypeMapping TypeName="GameAndChillDBModel.Question">
-              <MappingFragment StoreEntitySet="Questions">
-                <ScalarProperty Name="ID" ColumnName="ID" />
-                <ScalarProperty Name="UserID" ColumnName="UserID" />
-                <ScalarProperty Name="Answer" ColumnName="Answer" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -485,7 +616,33 @@
               <ScalarProperty Name="ID" ColumnName="PlatformID" />
             </EndProperty>
           </AssociationSetMapping>
-        </EntityContainerMapping>
+          <EntitySetMapping Name="Answers">
+            <EntityTypeMapping TypeName="GameAndChillDBModel.Answer">
+              <MappingFragment StoreEntitySet="Answers">
+                <ScalarProperty Name="Answer1" ColumnName="Answer" />
+                <ScalarProperty Name="UserID" ColumnName="UserID" />
+                <ScalarProperty Name="QuestionID" ColumnName="QuestionID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Question_Genre">
+            <EntityTypeMapping TypeName="GameAndChillDBModel.Question_Genre">
+              <MappingFragment StoreEntitySet="Question_Genre">
+                <ScalarProperty Name="Answer" ColumnName="Answer" />
+                <ScalarProperty Name="GenreID" ColumnName="GenreID" />
+                <ScalarProperty Name="QuestionID" ColumnName="QuestionID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Questions">
+            <EntityTypeMapping TypeName="GameAndChillDBModel.Question">
+              <MappingFragment StoreEntitySet="Questions">
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>
   </edmx:Runtime>

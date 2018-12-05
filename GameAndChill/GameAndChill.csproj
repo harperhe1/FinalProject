@@ -161,6 +161,9 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Models\Answer.cs">
+      <DependentUpon>GameAndChillDB.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\ConSoulFindGame.cs" />
     <Compile Include="Models\Game.cs">
       <DependentUpon>GameAndChillDB.tt</DependentUpon>
@@ -190,6 +193,9 @@
       <DependentUpon>GameAndChillDB.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\Question.cs">
+      <DependentUpon>GameAndChillDB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\Question_Genre.cs">
       <DependentUpon>GameAndChillDB.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\User.cs">
