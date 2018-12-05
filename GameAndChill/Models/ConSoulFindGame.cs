@@ -70,7 +70,10 @@ namespace GameAndChill.Models
                 {
                     foreach(Game game in g.Games)
                     {
-                        result.Add(game);
+                        if (ORM.User_Game.Where(x => x.UserID == User.ID && x.GameID == game.ID).Count() == 0)
+                        {
+                            result.Add(game);
+                        }
                     }
                 }
             }

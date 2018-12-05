@@ -228,7 +228,16 @@ namespace GameAndChill.Controllers
         {
             //Game game = ORM.Games.Find(gameID);
             ConSoulFindGame alg = new ConSoulFindGame(userID);
-            ViewBag.GameDetails = alg.Result().First();
+            List<Game> games = alg.Result();
+            if(games.Count != 0)
+            {
+                ViewBag.GameDetails = alg.Result().First();
+            }
+            else
+            {
+                ViewBag.Error = "No games left to find :(";
+                return View("Error");
+            }
             ViewBag.CurrentUser = alg.User;
             return View();
         }
