@@ -32,7 +32,7 @@ namespace GameAndChill.Models
         public Answer Ans4 { get; set; }
         public Answer Ans5 { get; set; }*/
 
-        public List<Game> Result
+        /*public List<Game> Result
         {
             get
             {
@@ -42,7 +42,7 @@ namespace GameAndChill.Models
             {
                 value = result();
             }
-        }
+        }*/
 
 
         private List<Genre> GetGenresFromAnswer(Answer answer)
@@ -58,7 +58,7 @@ namespace GameAndChill.Models
             return list;
         }
 
-        private List<Game> result()
+        public List<Game> Result()
         {
             // skeleton of the path we take to get games from the user's answers
             List<Game> result = new List<Game>();

@@ -226,9 +226,9 @@ namespace GameAndChill.Controllers
 
         public ActionResult GameFinder(int gameID, int userID)
         {
-            Game game = ORM.Games.Find(gameID);
+            //Game game = ORM.Games.Find(gameID);
             ConSoulFindGame alg = new ConSoulFindGame(userID);
-            ViewBag.GameDetails = game;
+            ViewBag.GameDetails = alg.Result().First();
             ViewBag.CurrentUser = alg.User;
             return View();
         }
