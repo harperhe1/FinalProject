@@ -77,13 +77,13 @@ namespace GameAndChill.Controllers
         public void AddQuestionToDB(int id, int answer, int qNum)
         {
             // create Question object and define its properties
-            Question q = new Question();
+            Answer q = new Answer();
             q.UserID = id;
-            q.ID = qNum;
-            q.Answer = answer;
+            q.QuestionID = qNum;
+            q.Answer1 = answer;
 
             // add to DB
-            ORM.Questions.Add(q);
+            ORM.Answers.Add(q);
         }
         public ActionResult SubmitQuestions(int id, int question1, int question2, int question3, int question4, int question5)
         {
@@ -143,7 +143,7 @@ namespace GameAndChill.Controllers
         public ActionResult EditAnswers(int id)
         {
             // pull users original answers
-            List<Question> found = ORM.Questions.Where(x=>x.UserID==id).ToList();
+            List<Answer> found = ORM.Answers.Where(x=>x.UserID==id).ToList();
 
             // if user hasn't submitted their answers yet, redirect to Questions method
             if(found.Count == 0)
@@ -161,10 +161,10 @@ namespace GameAndChill.Controllers
         public void EditQuestionInDB(int id, int answer, int qNum)
         {
             // create Question object and define its properties
-            Question q = new Question();
+            Answer q = new Answer();
             q.UserID = id;
-            q.ID = qNum;
-            q.Answer = answer;
+            q.QuestionID = qNum;
+            q.Answer1 = answer;
 
             // modify entry in DB
             ORM.Entry(q).State = System.Data.Entity.EntityState.Modified;
