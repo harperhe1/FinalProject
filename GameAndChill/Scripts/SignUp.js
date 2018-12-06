@@ -1,8 +1,8 @@
-﻿regexName = /^[A-Z][a-z]{1,19}$/;
+﻿regexName = /^[A-Za-z].{1,25}/;
 
 function testName() {
     var nameValue = $('#name').val();
-    var nameError = $('nameError');
+    var nameError = $('#nameError');
 
     if (!regexName.test(nameValue)) {
 
