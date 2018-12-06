@@ -214,7 +214,10 @@ namespace GameAndChill.Controllers
                     g.Summary = game["summary"].ToString();
             }
             g.URL = game["url"].ToString();
-            g.ImageURL = game["cover"]["url"].ToString();
+            if(game["cover"] != null)
+            {
+                g.ImageURL = game["cover"]["url"].ToString();
+            }
             if (game["keyword"] != null)
             {
                 foreach (JObject keyword in game["keywords"])

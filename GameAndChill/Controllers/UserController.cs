@@ -156,7 +156,7 @@ namespace GameAndChill.Controllers
         }
 
 
-        public ActionResult GameFinder(int gameID, int userID)
+        public ActionResult GameFinder(int userID)
         {
             //Game game = ORM.Games.Find(gameID);
             ConSoulFindGame alg = new ConSoulFindGame(userID);

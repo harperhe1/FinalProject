@@ -17,7 +17,12 @@ namespace GameAndChill.Controllers
             // display list of users
 
             ViewBag.Users = ORM.Users.ToList();
+            if(ORM.Genres.Count() == 0)
+            {
+                return RedirectToAction("AddGenresToDB", "Game");
+            }
             return View();
+
         }
 
         public ActionResult About()

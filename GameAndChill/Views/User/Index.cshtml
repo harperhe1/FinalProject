@@ -3,6 +3,7 @@
 
 <table class="table">
     <tr>
+        <th>@*Picture*@</th>
         <th>Game Name</th>
         <th>@*details*@</th>
         <th>@*remove*@</th>
@@ -15,19 +16,22 @@
         {
             <tr>
                 <td>
+                    <img src="@game.Game.ImageURL" />
+                </td>
+                <td>
                     @game.Game.Name
                 </td>
                 <td><a href="/Game/Details?id=@game.GameID&UserID=@ViewBag.CurrentUser.ID">Details</a></td>
                 <td>Remove</td>
-                <td>Link</td>
-                <td>LinkAM</td>
+                <td><a href="@game.Game.URL">Link</a></td>
+                <td>@*LinkAM This will be for Amazon if we have time*@</td>
             </tr>
         }
     }
     @*foreach: List of saved games*@
 </table>
 
-<a href="/User/GameFinder?userID=@ViewBag.CurrentUser.ID&gameID=1942">Find Game</a><br />
+<a href="/User/GameFinder?userID=@ViewBag.CurrentUser.ID">Find Game</a><br />
 <a href="/User/EditAnswers?id=@ViewBag.CurrentUser.ID">Edit Answers</a><br />
 <a href="/User/DeleteUser?id=@ViewBag.CurrentUser.ID" onclick="return confirm('Are you sure you want to delete this user?')" class="btn-danger btn-sm" name="DeleteUser">Delete User</a><br />
 <a href="/Home/Index">Sign Out</a>
