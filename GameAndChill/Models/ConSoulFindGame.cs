@@ -39,7 +39,7 @@ namespace GameAndChill.Models
             // TODO: Fix this at somepoint. Also possibly put the info into a Cookie
             // skeleton of the path we take to get games from the user's answers
             List<Game> result = new List<Game>();
-            
+
             foreach (Answer a in User.Answers)
             {
                 List<Genre> list = GetGenresFromAnswer(a);
@@ -49,12 +49,16 @@ namespace GameAndChill.Models
                     {
                         if (game.User_Game.Where(x => x.UserID == User.ID).Count() == 0)
                         {
-                            result.Add(game);
+                            game.Priority++;
+                            if (game.Priority == 1)
+                            {
+                                result.Add(game);
+                            }
                         }
                     }
                 }
             }
-            return result;
+            return result.OrderByDescending(g => g.Priority).ToList();
         }
         
     }

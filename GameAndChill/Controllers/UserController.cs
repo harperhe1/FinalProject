@@ -163,7 +163,8 @@ namespace GameAndChill.Controllers
             List<Game> games = alg.Result();
             if(games.Count != 0)
             {
-                ViewBag.GameDetails = games.First(); // TODO: change to random instead of a First one
+                Game firstResult = games.First();
+                ViewBag.GameDetails = firstResult; // TODO: change to random instead of a First one
             }
             else
             {

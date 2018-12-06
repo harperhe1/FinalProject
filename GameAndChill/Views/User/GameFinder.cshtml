@@ -9,6 +9,7 @@
 <input type="button" value="Dislike" onclick="location.href='@Url.Action("LikeGame","User", new { isLike = false, userID = ViewBag.CurrentUser.ID, gameID = ViewBag.GameDetails.ID })'" />
 
 @*Next Game*@
+<p>Priority: @ViewBag.GameDetails.Priority</p>
 
 <p>Summary: @ViewBag.GameDetails.Summary</p>
 <p>Genre:</p>
