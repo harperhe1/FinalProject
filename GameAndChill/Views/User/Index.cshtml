@@ -1,39 +1,40 @@
 ﻿<br />
 <h2>Welcome, @ViewBag.CurrentUser.Name</h2>
-
-<table class="table">
-    <tr>
-        <th>@*Picture*@</th>
-        <th>Game Name</th>
-        <th>@*details*@</th>
-        <th>@*remove*@</th>
-        <th>@*IGDB link*@</th>
-        <th>@*amazon link?*@</th>
-    </tr>
-    @foreach(GameAndChill.Models.User_Game game in ViewBag.CurrentUser.User_Game)
-    {
-        if (game.IsLike == true)
+<section class=" with-title">
+    <table class="table is-bordered is-center">
+        <tr>
+            <th>@*Picture*@</th>
+            <th>Game Name</th>
+            <th>@*details*@</th>
+            <th>@*remove*@</th>
+            <th>@*IGDB link*@</th>
+            <th>@*amazon link?*@</th>
+        </tr>
+        @foreach (GameAndChill.Models.User_Game game in ViewBag.CurrentUser.User_Game)
         {
-            <tr>
-                <td>
-                    <img src="@game.Game.ImageURL" />
-                </td>
-                <td>
-                    @game.Game.Name
-                </td>
-                <td><a href="/Game/Details?id=@game.GameID&UserID=@ViewBag.CurrentUser.ID">Details</a></td>
-                <td><a href="/User/RemoveGame?GameID=@game.GameID&UserID=@ViewBag.CurrentUser.ID">Remove</a></td>
-                <td><a href="@game.Game.URL">Link</a></td>
-                <td>@*LinkAM This will be for Amazon if we have time*@</td>
-            </tr>
+            if (game.IsLike == true)
+            {
+                <tr>
+                    <td>
+                        <img src="@game.Game.ImageURL" />
+                    </td>
+                    <td>
+                        @game.Game.Name
+                    </td>
+                    <td><a href="/Game/Details?id=@game.GameID&UserID=@ViewBag.CurrentUser.ID" class="btn is-primary">Details</a></td>
+                    <td><a href="/User/RemoveGame?GameID=@game.GameID&UserID=@ViewBag.CurrentUser.ID" class="btn is-warning">Remove</a></td>
+                    <td><a href="@game.Game.URL" class="btn is-success">Link</a></td>
+                    <td>@*LinkAM This will be for Amazon if we have time*@</td>
+                </tr>
+            }
         }
-    }
-    @*foreach: List of saved games*@
-</table>
+        @*foreach: List of saved games*@
+    </table >
+</section>
 
 <a href="/User/GameFinder?userID=@ViewBag.CurrentUser.ID">Find Game</a><br />
 <a href="/User/EditAnswers?id=@ViewBag.CurrentUser.ID">Edit Answers</a><br />
-<a href="/User/DeleteUser?id=@ViewBag.CurrentUser.ID" onclick="return confirm('Are you sure you want to delete this user?')" class="btn is-warning" name="DeleteUser">Delete User</a><br />
+<a href="/User/DeleteUser?id=@ViewBag.CurrentUser.ID" onclick="return confirm('Are you sure you want to delete this user?')" class="btn is-error" name="DeleteUser">Delete User</a><br />
 <a href="/Home/Index">Sign Out</a>
 <table>
     <tr>

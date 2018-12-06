@@ -22,12 +22,14 @@ namespace GameAndChill.Controllers
         }
         public ActionResult Details(int id, int? UserID)
         {
-            if (Validate.GameExists(id, ViewBag.Error))
+            if (Validate.GameExists(id, out string Error))
             {
+                ViewBag.Error = Error;
                 return View("Error");
             }
-            if (UserID.HasValue && Validate.UserExists((int)UserID, ViewBag.Error))
+            if (UserID.HasValue && Validate.UserExists((int)UserID,out Error))
             {
+                ViewBag.Error = Error;
                 return View("Error");
             }
             ViewBag.Game = ORM.Games.Find(id);
