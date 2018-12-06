@@ -9,10 +9,9 @@
 
 <br />
 
-<a href="/User/Index?id=@ViewBag.CurrentUser.ID">Cancel</a>
 <br /><br />
 <label>Question 1</label>
-<form action="/User/SaveQuestionChanges" method="post">
+<form action="/User/SaveQuestionChanges" method="post" class="table is-bordered">
     <input type="hidden" name="id" value="@ViewBag.CurrentUser.ID" />
     <p>@*Filling the question for the time being*@Favorite Disney Princess</p>
     <select name="answer1">
@@ -54,6 +53,7 @@
         <option value="4">Trap Jaw</option>
         <option value="5">King Hiss</option>
     </select><br /><br />
-    <input type="submit" value="Save Changes" />
+    <input type="submit" value="Save Changes" class="btn is-success "  />
+    <a href="/User/Index?id=@ViewBag.CurrentUser.ID" class="btn is-warning">Cancel</a>
 </form>
 
