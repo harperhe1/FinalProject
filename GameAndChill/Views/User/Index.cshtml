@@ -22,7 +22,7 @@
                     @game.Game.Name
                 </td>
                 <td><a href="/Game/Details?id=@game.GameID&UserID=@ViewBag.CurrentUser.ID">Details</a></td>
-                <td>Remove</td>
+                <td><a href="/User/RemoveGame?GameID=@game.GameID&UserID=@ViewBag.CurrentUser.ID">Remove</a></td>
                 <td><a href="@game.Game.URL">Link</a></td>
                 <td>@*LinkAM This will be for Amazon if we have time*@</td>
             </tr>

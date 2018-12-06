@@ -12,6 +12,11 @@ namespace GameAndChill.Controllers
 
         // TODO: Do more Css on Home Pages
         GameAndChillDBEntities ORM = new GameAndChillDBEntities();
+        static bool ValidateUser(int userID)
+        {
+
+            return true;
+        }
         public ActionResult Index()
         {
             // display list of users

@@ -24,12 +24,11 @@ namespace GameAndChill.Controllers
 
             // if the ID doesn't match a user in the database, return an error
             User currentUser = ORM.Users.Find(id);
-            if(currentUser == null)
+            if (Validate.UserExists((int)id, ViewBag.Error))
             {
-                ViewBag.Error = "User does not exist.";
                 return View("Error");
             }
-            
+
             // pass user info to the view
             ViewBag.CurrentUser = currentUser;
             return View();
@@ -51,7 +50,8 @@ namespace GameAndChill.Controllers
             ORM.SaveChanges();
 
             // get the ID of our new user; send to viewbag
-            id = ORM.Users.Where(x => x.Name == newUser.Name).Last().ID;
+            User u = ORM.Users.Where(x => x.Name == newUser.Name).ToList().Last();
+            id = u.ID;
 
             return RedirectToAction("Questions", new { id });
         }
@@ -68,6 +68,10 @@ namespace GameAndChill.Controllers
         }
         public ActionResult Questions(int id)
         {
+            if (Validate.UserExists(id, ViewBag.Error))
+            {
+                return View("Error");
+            }
             User currentUser = ORM.Users.Find(id);
             ViewBag.CurrentUser = currentUser;
             return View();
@@ -85,6 +89,10 @@ namespace GameAndChill.Controllers
         }
         public ActionResult SubmitQuestions(int id, int answer1, int answer2, int answer3, int answer4, int answer5)
         {
+            if (Validate.UserExists(id, ViewBag.Error))
+            {
+                return View("Error");
+            }
             // Validation
             if (!ValidAnswer(answer1) || !ValidAnswer(answer2) || !ValidAnswer(answer3) || !ValidAnswer(answer4) || !ValidAnswer(answer5))
             {
@@ -107,6 +115,10 @@ namespace GameAndChill.Controllers
 
         public ActionResult EditAnswers(int id)
         {
+            if (Validate.UserExists(id, ViewBag.Error))
+            {
+                return View("Error");
+            }
             // pull users original answers
             User currentUser = ORM.Users.Find(id);
             List<Answer> found = currentUser.Answers.ToList();
@@ -136,6 +148,10 @@ namespace GameAndChill.Controllers
         }
         public ActionResult SaveQuestionChanges(int id, int answer1, int answer2, int answer3, int answer4, int answer5)
         {
+            if (Validate.UserExists(id, ViewBag.Error))
+            {
+                return View("Error");
+            }
             // Validation
             if (!ValidAnswer(answer1) || !ValidAnswer(answer2) || !ValidAnswer(answer3) || !ValidAnswer(answer4) || !ValidAnswer(answer5))
             {
@@ -158,6 +174,10 @@ namespace GameAndChill.Controllers
 
         public ActionResult GameFinder(int userID)
         {
+            if(Validate.UserExists(userID,ViewBag.Error))
+            {
+                return View("Error");
+            }
             //Game game = ORM.Games.Find(gameID);
             ConSoulFindGame alg = new ConSoulFindGame(userID);
             List<Game> games = alg.Result();
@@ -174,8 +194,27 @@ namespace GameAndChill.Controllers
             ViewBag.CurrentUser = alg.User;
             return View();
         }
+        public ActionResult RemoveGame(int UserID, int GameID)
+        {
+            if (!Validate.UserExists(UserID,ViewBag.Error))
+            {
+                return View("Error");
+            }
+            User user = ORM.Users.Find(UserID);
+            User_Game ug = user.User_Game.Where(x => x.GameID == GameID).First();
+            if (ug != null)
+            {
+                ORM.User_Game.Remove(ug);
+            }
+            ORM.SaveChanges();
+            return RedirectToAction("Index", new {id =  UserID });
+        }
         public ActionResult LikeGame(bool isLike, int userID, int gameID)
         {
+            if (Validate.UserExists(userID, ViewBag.Error) || Validate.GameExists(gameID,ViewBag.Error))
+            {
+                return View("Error");
+            }
             // check database if it's liked or disliked by this user
             User_Game found = ORM.User_Game.Find(userID, gameID);
             if (found == null)
@@ -200,19 +239,32 @@ namespace GameAndChill.Controllers
             else { like = "disliked"; }
             TempData["IsLike"] = $"Added to {like} games";
 
-            return RedirectToAction("GameFinder", new { gameID, userID });
+            return RedirectToAction("GameFinder", new { userID });
         }
-
-
         public ActionResult DeleteUser(int id) //Delete a user from the database
         {
+            if (Validate.UserExists(id, ViewBag.Error))
+            {
+                return View("Error");
+            }
             //Find user ID
             User userDelete = ORM.Users.Find(id);
+            
 
             //Get their name
             string name = userDelete.Name;
 
             //Remove the user ID
+            var userGames = userDelete.User_Game.ToList();
+            foreach (User_Game user_Game in  userGames)
+            {
+                ORM.User_Game.Remove(user_Game);
+            }
+            var userAnswers = userDelete.Answers.ToList();
+            foreach(Answer answer in userAnswers)
+            {
+                ORM.Answers.Remove(answer);
+            }
             ORM.Users.Remove(userDelete);
 
             //SaveChanges duhhhhhhhh (Kidding, for real though it does save the changes to the DB)
