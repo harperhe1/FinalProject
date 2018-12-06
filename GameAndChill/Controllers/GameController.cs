@@ -159,6 +159,11 @@ namespace GameAndChill.Controllers
             // return null if something goes wrong with the request/response
             return null;
         }
+
+        public ActionResult AddGames()
+        {
+            return View();
+        }
         public ActionResult AddGamesToDb(int startId, int endId)
         {
             List<int> ids = new List<int>();

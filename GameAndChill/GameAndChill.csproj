@@ -274,6 +274,7 @@
     <Content Include="Views\Game\GenreQuestions.cshtml" />
     <Content Include="Views\Game\EditGenres.cshtml" />
     <Content Include="Views\Game\ListAllGames.cshtml" />
+    <Content Include="Views\Game\AddGames.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
