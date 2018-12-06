@@ -3,9 +3,12 @@
 
 <form action="/User/AddUser" method="post">
     <label>Name</label>
-    <input type="text" name="Name" required /><br/><br/><br/>
-    <input type="submit" value="Add User"/><br /><br />
+    <input type="text" name="Name" id="name" onkeyup="" pattern="^[A-Z a-z]{1,20}$ " required />
+    <div id="nameError" style="font-weight:bold"></div>
+    <br/><br/><br/>
+    <input type="submit" id="formButton" value="Add User"/><br /><br />
 </form>
 
 <a href="/Home/Index">Cancel</a>
 
+<script src="~/Scripts/SignUp.js"></script>
