@@ -18,19 +18,25 @@ namespace GameAndChill.Controllers
         // TODO: Do more Css on User Pages
         public ActionResult Index()
         {
-            // TODO: temporary.
-            JObject TheWitcher = GetGameByID(1234);
-            ViewBag.GameInfo = TheWitcher;
             return View();
         }
         public ActionResult Details(int id, int? UserID)
         {
+            if (Validate.GameExists(id, ViewBag.Error))
+            {
+                return View("Error");
+            }
+            if (UserID.HasValue && Validate.UserExists((int)UserID, ViewBag.Error))
+            {
+                return View("Error");
+            }
             ViewBag.Game = ORM.Games.Find(id);
             ViewBag.User = ORM.Users.Find(UserID);
             return View();
         }
         public ActionResult GenreQuestions(int qID, int aID)
         {
+            //ToDo:Question Validate & Answer Validate
             ViewBag.Question = ORM.Questions.Find(qID);
             ViewBag.Genres = ORM.Genres.ToList();
             ViewBag.Answer = aID;
