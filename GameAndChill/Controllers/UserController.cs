@@ -69,7 +69,7 @@ namespace GameAndChill.Controllers
         }
         public ActionResult Questions(int id)
         {
-            if (Validate.UserExists(id, out string Error))
+            if (!Validate.UserExists(id, out string Error))
             {
                 ViewBag.Error = Error;
                 return View("Error");
@@ -91,7 +91,7 @@ namespace GameAndChill.Controllers
         }
         public ActionResult SubmitQuestions(int id, int answer1, int answer2, int answer3, int answer4, int answer5)
         {
-            if (Validate.UserExists(id, out string Error))
+            if (!Validate.UserExists(id, out string Error))
             {
                 ViewBag.Error = Error;
                 return View("Error");
@@ -118,7 +118,7 @@ namespace GameAndChill.Controllers
 
         public ActionResult EditAnswers(int id)
         {
-            if (Validate.UserExists(id, out string Error))
+            if (!Validate.UserExists(id, out string Error))
             {
                 ViewBag.Error = Error;
                 return View("Error");
@@ -152,7 +152,7 @@ namespace GameAndChill.Controllers
         }
         public ActionResult SaveQuestionChanges(int id, int answer1, int answer2, int answer3, int answer4, int answer5)
         {
-            if (Validate.UserExists(id, out string Error))
+            if (!Validate.UserExists(id, out string Error))
             {
                 ViewBag.Error = Error;
                 return View("Error");
@@ -179,7 +179,7 @@ namespace GameAndChill.Controllers
 
         public ActionResult GameFinder(int userID)
         {
-            if(Validate.UserExists(userID,out string Error))
+            if(!Validate.UserExists(userID,out string Error))
             {
                 ViewBag.Error = Error;
                 return View("Error");
@@ -219,7 +219,7 @@ namespace GameAndChill.Controllers
         public ActionResult LikeGame(bool isLike, int userID, int gameID)
         {
             string Error;
-            if (Validate.UserExists(userID, out Error) || Validate.GameExists(gameID, out Error))
+            if (!Validate.UserExists(userID, out Error) || !Validate.GameExists(gameID, out Error))
             {
                 ViewBag.Error = Error;
                 return View("Error");
@@ -252,7 +252,7 @@ namespace GameAndChill.Controllers
         }
         public ActionResult DeleteUser(int id) //Delete a user from the database
         {
-            if (Validate.UserExists(id, out string Error))
+            if (!Validate.UserExists(id, out string Error))
             {
                 ViewBag.Error = Error;
                 return View("Error");
