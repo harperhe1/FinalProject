@@ -273,6 +273,7 @@
     <Content Include="Views\User\EditAnswers.cshtml" />
     <Content Include="Views\Game\GenreQuestions.cshtml" />
     <Content Include="Views\Game\EditGenres.cshtml" />
+    <Content Include="Views\Game\ListAllGames.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

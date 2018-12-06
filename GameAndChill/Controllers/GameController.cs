@@ -325,6 +325,13 @@ namespace GameAndChill.Controllers
             ViewBag.Questions = ORM.Questions.ToList();
             return View();
         }
+
+        public ActionResult ListAllGames()
+        {
+            List<Game> listOfGames = ORM.Games.ToList();
+            ViewBag.ListOfGames = listOfGames;
+            return View();
+        }
     
     }
 }

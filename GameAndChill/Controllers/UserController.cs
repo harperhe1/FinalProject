@@ -134,21 +134,21 @@ namespace GameAndChill.Controllers
             // modify entry in DB
             ORM.Entry(q).State = System.Data.Entity.EntityState.Modified;
         }
-        public ActionResult SaveQuestionChanges(int id, int question1, int question2, int question3, int question4, int question5)
+        public ActionResult SaveQuestionChanges(int id, int answer1, int answer2, int answer3, int answer4, int answer5)
         {
             // Validation
-            if (!ValidAnswer(question1) || !ValidAnswer(question2) || !ValidAnswer(question3) || !ValidAnswer(question4) || !ValidAnswer(question5))
+            if (!ValidAnswer(answer1) || !ValidAnswer(answer2) || !ValidAnswer(answer3) || !ValidAnswer(answer4) || !ValidAnswer(answer5))
             {
                 ViewBag.Error = "One or more of your question submissions was invalid. Try Again.";
                 return View("Error");
             }
 
             // modify each question
-            EditQuestionInDB(id, question1, 1);
-            EditQuestionInDB(id, question2, 2);
-            EditQuestionInDB(id, question3, 3);
-            EditQuestionInDB(id, question4, 4);
-            EditQuestionInDB(id, question5, 5);
+            EditQuestionInDB(id, answer1, 1);
+            EditQuestionInDB(id, answer2, 2);
+            EditQuestionInDB(id, answer3, 3);
+            EditQuestionInDB(id, answer4, 4);
+            EditQuestionInDB(id, answer5, 5);
 
             ORM.SaveChanges();
 
