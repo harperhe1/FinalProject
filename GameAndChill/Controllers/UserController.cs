@@ -24,8 +24,9 @@ namespace GameAndChill.Controllers
 
             // if the ID doesn't match a user in the database, return an error
             User currentUser = ORM.Users.Find(id);
-            if (Validate.UserExists((int)id, ViewBag.Error))
+            if (!Validate.UserExists((int)id, out string Error))
             {
+                ViewBag.Error = Error;
                 return View("Error");
             }
 
@@ -68,8 +69,9 @@ namespace GameAndChill.Controllers
         }
         public ActionResult Questions(int id)
         {
-            if (Validate.UserExists(id, ViewBag.Error))
+            if (Validate.UserExists(id, out string Error))
             {
+                ViewBag.Error = Error;
                 return View("Error");
             }
             User currentUser = ORM.Users.Find(id);
@@ -89,8 +91,9 @@ namespace GameAndChill.Controllers
         }
         public ActionResult SubmitQuestions(int id, int answer1, int answer2, int answer3, int answer4, int answer5)
         {
-            if (Validate.UserExists(id, ViewBag.Error))
+            if (Validate.UserExists(id, out string Error))
             {
+                ViewBag.Error = Error;
                 return View("Error");
             }
             // Validation
@@ -115,8 +118,9 @@ namespace GameAndChill.Controllers
 
         public ActionResult EditAnswers(int id)
         {
-            if (Validate.UserExists(id, ViewBag.Error))
+            if (Validate.UserExists(id, out string Error))
             {
+                ViewBag.Error = Error;
                 return View("Error");
             }
             // pull users original answers
@@ -148,8 +152,9 @@ namespace GameAndChill.Controllers
         }
         public ActionResult SaveQuestionChanges(int id, int answer1, int answer2, int answer3, int answer4, int answer5)
         {
-            if (Validate.UserExists(id, ViewBag.Error))
+            if (Validate.UserExists(id, out string Error))
             {
+                ViewBag.Error = Error;
                 return View("Error");
             }
             // Validation
@@ -174,8 +179,9 @@ namespace GameAndChill.Controllers
 
         public ActionResult GameFinder(int userID)
         {
-            if(Validate.UserExists(userID,ViewBag.Error))
+            if(Validate.UserExists(userID,out string Error))
             {
+                ViewBag.Error = Error;
                 return View("Error");
             }
             //Game game = ORM.Games.Find(gameID);
@@ -196,8 +202,9 @@ namespace GameAndChill.Controllers
         }
         public ActionResult RemoveGame(int UserID, int GameID)
         {
-            if (!Validate.UserExists(UserID,ViewBag.Error))
+            if (!Validate.UserExists(UserID,out string Error))
             {
+                ViewBag.Error = Error;
                 return View("Error");
             }
             User user = ORM.Users.Find(UserID);
@@ -211,8 +218,10 @@ namespace GameAndChill.Controllers
         }
         public ActionResult LikeGame(bool isLike, int userID, int gameID)
         {
-            if (Validate.UserExists(userID, ViewBag.Error) || Validate.GameExists(gameID,ViewBag.Error))
+            string Error;
+            if (Validate.UserExists(userID, out Error) || Validate.GameExists(gameID, out Error))
             {
+                ViewBag.Error = Error;
                 return View("Error");
             }
             // check database if it's liked or disliked by this user
@@ -243,8 +252,9 @@ namespace GameAndChill.Controllers
         }
         public ActionResult DeleteUser(int id) //Delete a user from the database
         {
-            if (Validate.UserExists(id, ViewBag.Error))
+            if (Validate.UserExists(id, out string Error))
             {
+                ViewBag.Error = Error;
                 return View("Error");
             }
             //Find user ID
