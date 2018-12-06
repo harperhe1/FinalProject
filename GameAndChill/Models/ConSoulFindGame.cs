@@ -7,7 +7,6 @@ namespace GameAndChill.Models
 {
     public class ConSoulFindGame
     {
-        public ConSoulFindGame() { }
         public ConSoulFindGame(int userID)
         {
             User = ORM.Users.Find(userID);
@@ -15,34 +14,11 @@ namespace GameAndChill.Models
         public ConSoulFindGame(User user)
         {
             User = user;
-            
-            /*Ans1 = ORM.Answers.Find(new { QuestionID = 1, UserID = user.ID });
-            Ans2 = ORM.Answers.Find(new { QuestionID = 2, UserID = user.ID });
-            Ans3 = ORM.Answers.Find(new { QuestionID = 3, UserID = user.ID });
-            Ans4 = ORM.Answers.Find(new { QuestionID = 4, UserID = user.ID });
-            Ans5 = ORM.Answers.Find(new { QuestionID = 5, UserID = user.ID });*/
-
         }
 
         GameAndChillDBEntities ORM = new GameAndChillDBEntities();
         public User User { get; set; }
-        /*public Answer Ans1 { get; set; }
-        public Answer Ans2 { get; set; }
-        public Answer Ans3 { get; set; }
-        public Answer Ans4 { get; set; }
-        public Answer Ans5 { get; set; }*/
 
-        /*public List<Game> Result
-        {
-            get
-            {
-                return result();
-            }
-            private set
-            {
-                value = result();
-            }
-        }*/
 
 
         private List<Genre> GetGenresFromAnswer(Answer answer)
@@ -60,6 +36,7 @@ namespace GameAndChill.Models
 
         public List<Game> Result()
         {
+            // TODO: Fix this at somepoint. Also possibly put the info into a Cookie
             // skeleton of the path we take to get games from the user's answers
             List<Game> result = new List<Game>();
             
@@ -70,7 +47,7 @@ namespace GameAndChill.Models
                 {
                     foreach(Game game in g.Games)
                     {
-                        if (ORM.User_Game.Where(x => x.UserID == User.ID && x.GameID == game.ID).Count() == 0)
+                        if (game.User_Game.Where(x => x.UserID == User.ID).Count() == 0)
                         {
                             result.Add(game);
                         }

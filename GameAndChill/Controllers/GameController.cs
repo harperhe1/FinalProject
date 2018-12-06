@@ -18,6 +18,7 @@ namespace GameAndChill.Controllers
         // TODO: Do more Css on User Pages
         public ActionResult Index()
         {
+            // TODO: temporary.
             JObject TheWitcher = GetGameByID(1234);
             ViewBag.GameInfo = TheWitcher;
             return View();
@@ -75,40 +76,12 @@ namespace GameAndChill.Controllers
             temp++;
             }
             ORM.SaveChanges();
-            TempData["test"] = GenreName.Count();
             return RedirectToAction("Index");
         }
         
 
         string APIKey = System.Configuration.ConfigurationManager.AppSettings["user-key"];
         GameAndChillDBEntities ORM = new GameAndChillDBEntities();
-
-        //Test api with this method. Gets The Witcher 3 and pushes into a viewbag 
-        //public void GetGame1942()
-        //{
-        //    //make our resquest
-        //    HttpWebRequest request = WebRequest.CreateHttp("https://api-endpoint.igdb.com/games/1942");
-
-        //    request.Headers.Add("user-key", APIKey);
-        //    request.Accept = "application/json";
-        //    //make our response
-        //    HttpWebResponse response = (HttpWebResponse)request.GetResponse();
-
-        //    if (response.StatusCode == HttpStatusCode.OK)
-        //    {
-        //        //get response stream
-        //        StreamReader reader = new StreamReader(response.GetResponseStream());
-
-        //        //read response stream as string
-        //        string output = reader.ReadToEnd();
-
-        //        //convert response to JSon
-        //        JArray GameInfo = JArray.Parse(output);
-
-        //        ViewBag.GameInfo = GameInfo;
-        //        reader.Close();
-        //    }
-        //}
 
         string expander = "?expand=keywords,platforms,genres&fields=name,summary,url,cover,keywords.name,platforms.name,genres.name";
 
@@ -344,7 +317,7 @@ namespace GameAndChill.Controllers
                 return RedirectToAction("Index", "Home");
             }
             // return null if something goes wrong with the request/response
-            return null;
+            return View("Error");
         }
 
         public ActionResult EditGenres()

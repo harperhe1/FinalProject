@@ -41,7 +41,7 @@ namespace GameAndChill.Controllers
         public ActionResult AddUser(User newUser)
         {
             int id;
-            if(newUser.Name == null || newUser.Name == "")
+            if(newUser.Name == null || newUser.Name == "") //used empty string in case it couldn't do null
             {
                 ViewBag.Error = "Must have a name";
                 return View("Error");
@@ -51,9 +51,7 @@ namespace GameAndChill.Controllers
             ORM.SaveChanges();
 
             // get the ID of our new user; send to viewbag
-            List<User> users = ORM.Users.Where(x => x.Name == newUser.Name).ToList();
-            id = users[users.Count - 1].ID;
-            ViewBag.id = id;
+            id = ORM.Users.Where(x => x.Name == newUser.Name).Last().ID;
 
             return RedirectToAction("Questions", new { id });
         }
@@ -85,54 +83,21 @@ namespace GameAndChill.Controllers
             // add to DB
             ORM.Answers.Add(q);
         }
-        public ActionResult SubmitQuestions(int id, int question1, int question2, int question3, int question4, int question5)
+        public ActionResult SubmitQuestions(int id, int answer1, int answer2, int answer3, int answer4, int answer5)
         {
             // Validation
-            if (!ValidAnswer(question1) || !ValidAnswer(question2) || !ValidAnswer(question3) || !ValidAnswer(question4) || !ValidAnswer(question5))
+            if (!ValidAnswer(answer1) || !ValidAnswer(answer2) || !ValidAnswer(answer3) || !ValidAnswer(answer4) || !ValidAnswer(answer5))
             {
                 ViewBag.Error = "One or more of your question submissions was invalid. Try Again.";
                 return View("Error");
             }
             
             // run the same method for different questions
-            AddQuestionToDB(id, question1, 1);
-            AddQuestionToDB(id, question2, 2);
-            AddQuestionToDB(id, question3, 3);
-            AddQuestionToDB(id, question4, 4);
-            AddQuestionToDB(id, question5, 5);
-
-            
-            // Original Code. Now generalized in the method "AddQuestionToDB". -David
-
-            /*Question q1 = new Question();
-            q1.UserID = id;
-            q1.ID = 1;
-            q1.Answer = question1;
-            ORM.Questions.Add(q1);
-
-            Question q2 = new Question();
-            q2.UserID = id;
-            q2.ID = 2;
-            q2.Answer = question2;
-            ORM.Questions.Add(q2);
-
-            Question q3 = new Question();
-            q3.UserID = id;
-            q3.ID = 3;
-            q3.Answer = question3;
-            ORM.Questions.Add(q3);
-
-            Question q4 = new Question();
-            q4.UserID = id;
-            q4.ID = 4;
-            q4.Answer = question4;
-            ORM.Questions.Add(q4);
-
-            Question q5 = new Question();
-            q5.UserID = id;
-            q5.ID = 5;
-            q5.Answer = question5;
-            ORM.Questions.Add(q5);*/
+            AddQuestionToDB(id, answer1, 1);
+            AddQuestionToDB(id, answer2, 2);
+            AddQuestionToDB(id, answer3, 3);
+            AddQuestionToDB(id, answer4, 4);
+            AddQuestionToDB(id, answer5, 5);
 
             ORM.SaveChanges();
 
@@ -143,16 +108,16 @@ namespace GameAndChill.Controllers
         public ActionResult EditAnswers(int id)
         {
             // pull users original answers
-            List<Answer> found = ORM.Answers.Where(x=>x.UserID==id).ToList();
+            User currentUser = ORM.Users.Find(id);
+            List<Answer> found = currentUser.Answers.ToList();
 
             // if user hasn't submitted their answers yet, redirect to Questions method
-            if(found.Count == 0)
+            if (found.Count == 0)
             {
                 return RedirectToAction("Questions", new { id });
             }
             
             // pass current user and their original answers to the view
-            User currentUser = ORM.Users.Find(id);
             ViewBag.CurrentUser = currentUser;
             ViewBag.Answers = found; // TODO: use this viewbag
             
@@ -185,39 +150,6 @@ namespace GameAndChill.Controllers
             EditQuestionInDB(id, question4, 4);
             EditQuestionInDB(id, question5, 5);
 
-
-            // Original Code. Now generalized in the method "EditQuestionInDB". -David
-
-            /*Question editQ1 = new Question();
-            editQ1.UserID = id;
-            editQ1.ID = 1;
-            editQ1.Answer = question1;
-            ORM.Entry(editQ1).State = System.Data.Entity.EntityState.Modified;
-
-            Question editQ2 = new Question();
-            editQ2.UserID = id;
-            editQ2.ID = 2;
-            editQ2.Answer = question2;
-            ORM.Entry(editQ2).State = System.Data.Entity.EntityState.Modified;
-
-            Question editQ3 = new Question();
-            editQ3.UserID = id;
-            editQ3.ID = 3;
-            editQ3.Answer = question3;
-            ORM.Entry(editQ3).State = System.Data.Entity.EntityState.Modified;
-
-            Question editQ4 = new Question();
-            editQ4.UserID = id;
-            editQ4.ID = 4;
-            editQ4.Answer = question4;
-            ORM.Entry(editQ4).State = System.Data.Entity.EntityState.Modified;
-
-            Question editQ5 = new Question();
-            editQ5.UserID = id;
-            editQ5.ID = 5;
-            editQ5.Answer = question5;
-            ORM.Entry(editQ5).State = System.Data.Entity.EntityState.Modified;*/
-
             ORM.SaveChanges();
 
             return RedirectToAction("Index", new { id });
@@ -231,7 +163,7 @@ namespace GameAndChill.Controllers
             List<Game> games = alg.Result();
             if(games.Count != 0)
             {
-                ViewBag.GameDetails = alg.Result().First();
+                ViewBag.GameDetails = games.First(); // TODO: change to random instead of a First one
             }
             else
             {
