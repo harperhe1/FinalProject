@@ -13,6 +13,9 @@ namespace GameAndChill.Controllers
     public class GameController : Controller
     {
         // GET: Game
+        // TODO: List all Games
+        // TODO: Add Games Page
+        // TODO: Do more Css on User Pages
         public ActionResult Index()
         {
             JObject TheWitcher = GetGameByID(1234);

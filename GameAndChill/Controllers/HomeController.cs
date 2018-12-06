@@ -9,6 +9,8 @@ namespace GameAndChill.Controllers
 {
     public class HomeController : Controller
     {
+
+        // TODO: Do more Css on Home Pages
         GameAndChillDBEntities ORM = new GameAndChillDBEntities();
         public ActionResult Index()
         {
