@@ -1,13 +1,13 @@
 ﻿@{ViewBag.Title = "Find a Game";}
 <br />
 <h2>GameFinder</h2>
-<a href="/User/Index?id=@ViewBag.CurrentUser.ID">Back to User Home</a>
+<a href="/User/Index?id=@ViewBag.CurrentUser">Back to User Home</a>
 @*Details of a specific game*@
 @TempData["IsLike"]
 <h2>@ViewBag.GameDetails.Name</h2>
 <img src="http:@ViewBag.GameDetails.ImageURL" />
-<input type="button" value="Like" onclick="location.href='@Url.Action("LikeGame","User", new { isLike = true, userID = ViewBag.CurrentUser.ID, gameID = ViewBag.GameDetails.ID })'" />
-<input type="button" value="Dislike" onclick="location.href='@Url.Action("LikeGame","User", new { isLike = false, userID = ViewBag.CurrentUser.ID, gameID = ViewBag.GameDetails.ID })'" />
+<input type="button" value="Like" onclick="location.href='@Url.Action("LikeGame","User", new { isLike = true, userID = ViewBag.CurrentUser, gameID = ViewBag.GameDetails.ID })'" />
+<input type="button" value="Dislike" onclick="location.href='@Url.Action("LikeGame","User", new { isLike = false, userID = ViewBag.CurrentUser, gameID = ViewBag.GameDetails.ID })'" />
 
 @*Next Game*@
 <p>Priority: @ViewBag.GameDetails.Priority</p>

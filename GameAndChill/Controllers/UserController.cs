@@ -173,31 +173,108 @@ namespace GameAndChill.Controllers
 
             ORM.SaveChanges();
 
+            // delete that user's cookie so the algorithm will rerun
+            Response.Cookies.Remove(id.ToString());
+
             return RedirectToAction("Index", new { id });
         }
 
 
         public ActionResult GameFinder(int userID)
         {
-            if(!Validate.UserExists(userID,out string Error))
+            /*
+            Currently cookie can remember the results of the algorithm EXCEPT for priority. 
+            Not quite sure if this has an effect on the genre order magic that we're still figuring out.
+            We have to keep editing the cookie every time the user likes/dislikes a game, 
+            and we also have to delete the cookie if they change their answers.
+            There's also a bug where sometimes it won't edit the cookie properly and crash the page.
+            Not sure if the process of rewriting the cookie is faster than simply running the algorithm again.            
+            Neat idea, but we probably won't implement it, at least in the state that it's in.
+            - David
+            */
+            
+            
+            // Validate userID
+            if (!Validate.UserExists(userID,out string Error))
             {
                 ViewBag.Error = Error;
                 return View("Error");
             }
-            //Game game = ORM.Games.Find(gameID);
-            ConSoulFindGame alg = new ConSoulFindGame(userID);
-            List<Game> games = alg.Result();
-            if(games.Count != 0)
+
+            // declare userID as a string, to be used when we look for a matching cookie
+            string cookKey = userID.ToString();
+            
+            HttpCookie newCookie;
+
+            // if there is no cookie for the specified user
+            if (Request.Cookies[cookKey] == null)
             {
-                Game firstResult = games.First();
-                ViewBag.GameDetails = firstResult; // TODO: change to random instead of a First one
+                // run the algorithm
+                ConSoulFindGame alg = new ConSoulFindGame(userID);
+                List<Game> games = alg.Result();
+
+                // if result is not empty
+                if (games.Count != 0)
+                {
+                    // send the first game to a viewbag
+                    Game firstResult = games.First();
+                    ViewBag.GameDetails = firstResult; // TODO: change to random instead of a First one
+
+                    // get list of game IDs from list as a string
+                    string gameIDs = "";
+                    foreach(Game g in games)
+                    {
+                        gameIDs = gameIDs + g.ID;
+                        if (g != games.Last())
+                        {
+                            gameIDs = gameIDs + ",";
+                        }
+                    }
+
+                    //uncomment this to test and check what gameIDs contains
+                    //TempData["IsLike"] = gameIDs;
+
+                    // put that in a cookie
+                    newCookie = new HttpCookie(cookKey, gameIDs);
+                    newCookie.Expires = new DateTime(2020,1,1);
+                    Response.Cookies.Add(newCookie);
+
+                    // send user data to the view
+                    ViewBag.CurrentUser = alg.User.ID;
+                }
+                else
+                {
+                    ViewBag.Error = "No games left to find :(";
+                    return View("Error");
+                }
             }
             else
             {
-                ViewBag.Error = "No games left to find :(";
-                return View("Error");
+                // look for the cookie
+                newCookie = Request.Cookies[cookKey];
+
+                // get data from the cookie and set it to a string
+                string gameIDString = Request.Cookies[cookKey].Value;
+
+                // parse by commas
+                string[] gameIDArray = gameIDString.Split(',');
+
+                // for loop to add games to the list based on the cookie
+                List<Game> games = new List<Game>();
+                for (int i = 0; i<gameIDArray.Length; i++)
+                {
+                    // find game in the database
+                    Game game = ORM.Games.Find(int.Parse(gameIDArray[i]));
+
+                    // add to list
+                    games.Add(game);
+                }
+
+                // send data to the view
+                ViewBag.GameDetails = games.First();
+                ViewBag.CurrentUser = userID;
             }
-            ViewBag.CurrentUser = alg.User;
+
             return View();
         }
         public ActionResult RemoveGame(int UserID, int GameID)
@@ -242,6 +319,21 @@ namespace GameAndChill.Controllers
             }
             ORM.SaveChanges();
 
+            // edit the cookie so the game doesn't reappear in gameFinder
+
+            // look for the cookie
+            string cookKey = userID.ToString();
+            HttpCookie newCookie = Request.Cookies[cookKey];
+
+            // get data from the cookie and set it to a string
+            string gameIDString = Request.Cookies[cookKey].Value;
+            
+            // rewrite the cookie. We get a substring of our original cookie, 
+            // starting after the first comma so it cuts off the first game
+            int toCut = gameIDString.Split(',')[0].Length + 1;
+            newCookie = new HttpCookie(cookKey, gameIDString.Substring(toCut));
+            Response.Cookies.Add(newCookie);
+            
             // return status message to the user (liked or disliked)
             string like = "";
             if (isLike) { like = "liked"; }

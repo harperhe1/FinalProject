@@ -22,6 +22,7 @@ namespace GameAndChill.Controllers
             // display list of users
 
             ViewBag.Users = ORM.Users.ToList();
+            ViewBag.Added = Request.Cookies["10"].ToString();
             if(ORM.Genres.Count() == 0)
             {
                 return RedirectToAction("AddGenresToDB", "Game");
