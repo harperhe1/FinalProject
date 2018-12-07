@@ -174,6 +174,11 @@ namespace GameAndChill.Controllers
         }
         public ActionResult AddGamesToDb(int startId, int endId)
         {
+            if(startId < 1 || endId < 1 || startId > endId)
+            {
+                ViewBag.Error = "Invalid startId or endId";
+                return View("Error");
+            }
             List<int> ids = new List<int>();
             for(int i =startId; i < endId +1; i++)
             {
