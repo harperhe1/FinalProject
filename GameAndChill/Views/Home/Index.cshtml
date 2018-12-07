@@ -1,12 +1,12 @@
-﻿
-<br/>
+﻿@{ViewBag.Title = "Home";}
+<br />
 @TempData["Added"]
 @TempData["Eulogy"]
 <br />
 <h3>Welcome to @*Will upload image here when the time comes*@ ConSoul.Find(<a href="/Game/Index">Game</a>)</h3>
-<br/>
+<br />
 <p><a href="/User/SignUp">Add New User</a></p>
-<br/>
+<br />
 <h2>List Of Users</h2>
 <ul>
     @foreach (dynamic user in ViewBag.Users)
