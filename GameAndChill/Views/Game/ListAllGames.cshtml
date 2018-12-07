@@ -1,28 +1,40 @@
-﻿<br/>
+﻿<br />
 @{
     ViewBag.Title = "List of all games";
 }
 
 <h2 style="display:inline">List All Games</h2>
-<form style="display:inline; float:right" >
-    <input type="search" name="search" /> <input type="submit" value="Search" />
+<form style="display:inline; float:right" onsubmit="return CheckSearch()">
+    <input type="search" name="search" id="search"/> <input type="submit" value="Search" />
 </form>
 
 <table class="table-bordered">
 
     @foreach (var game in ViewBag.ListOfGames)
     {
-    <tr>
-        <td>
-            <img src="@game.ImageURL" />
-        </td>
-        <td>
-            @game.Name
-        </td>
-        <td>
-            <a href="/Game/Details?id=@game.ID">Game Details</a>
-        </td>
-    </tr>
+        <tr>
+            <td>
+                <img src="@game.ImageURL" />
+            </td>
+            <td>
+                @game.Name
+            </td>
+            <td>
+                <a href="/Game/Details?id=@game.ID">Game Details</a>
+            </td>
+        </tr>
     }
 </table>
 
+
+<script type="text/javascript">
+    function CheckSearch() {
+        var search = document.getElementById("search").value;
+        if (/<\w+>/.test(search)) {
+
+            return false;
+        }
+        return true;
+    }
+
+    </script >
