@@ -347,9 +347,18 @@ namespace GameAndChill.Controllers
             return View();
         }
 
-        public ActionResult ListAllGames()
+        public ActionResult ListAllGames(string search)
         {
-            List<Game> listOfGames = ORM.Games.ToList();
+            List<Game> listOfGames;
+            if (search == null || search == "")
+            {
+                listOfGames = ORM.Games.ToList();
+            }
+            else
+            {
+                listOfGames = ORM.Games.Where(x => x.Name.Contains(search)).ToList();
+            }
+
             ViewBag.ListOfGames = listOfGames;
             return View();
         }

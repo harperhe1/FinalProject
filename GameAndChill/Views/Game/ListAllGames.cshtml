@@ -3,9 +3,13 @@
     ViewBag.Title = "List of all games";
 }
 
-<h2>List All Games</h2>
+<h2 style="display:inline">List All Games</h2>
+<form style="display:inline; float:right" >
+    <input type="search" name="search" /> <input type="submit" value="Search" />
+</form>
 
 <table class="table-bordered">
+
     @foreach (var game in ViewBag.ListOfGames)
     {
     <tr>
