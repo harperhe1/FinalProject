@@ -40,33 +40,21 @@ namespace GameAndChill.Controllers
         }
         public ActionResult AddUser(User newUser)
         {
-            int id;
+            
             if(newUser.Name == null || newUser.Name == "") //used empty string in case it couldn't do null
             {
                 ViewBag.Error = "Must have a name";
                 return View("Error");
             }
-            // add to DB
-            ORM.Users.Add(newUser);
-            ORM.SaveChanges();
 
-            // get the ID of our new user; send to viewbag
-            User u = ORM.Users.Where(x => x.Name == newUser.Name).ToList().Last();
-            id = u.ID;
+            // add to DB, then get the ID of our new user
+            int id = UserMgmt.AddUserReturnID(newUser);
 
             return RedirectToAction("Questions", new { id });
         }
 
 
-        public bool ValidAnswer(int q)
-        {
-            // Check if the answer passed in is between 1 and 5. If not, we don't want that in our database and messing anything up!
-            if (q <= 5 && q >= 1)
-            {
-                return true;
-            }
-            return false;
-        }
+        
         public ActionResult Questions(int id)
         {
             if (!Validate.UserExists(id, out string Error))
@@ -74,21 +62,13 @@ namespace GameAndChill.Controllers
                 ViewBag.Error = Error;
                 return View("Error");
             }
-            User currentUser = ORM.Users.Find(id);
-            ViewBag.CurrentUser = currentUser;
+
+            // get user from DB
+            ViewBag.CurrentUser = UserMgmt.GetUser(id);
+
             return View();
         }
-        public void AddQuestionToDB(int id, int answer, int qNum)
-        {
-            // create Question object and define its properties
-            Answer q = new Answer();
-            q.UserID = id;
-            q.QuestionID = qNum;
-            q.Answer1 = answer;
-
-            // add to DB
-            ORM.Answers.Add(q);
-        }
+        
         public ActionResult SubmitQuestions(int id, int answer1, int answer2, int answer3, int answer4, int answer5)
         {
             if (!Validate.UserExists(id, out string Error))
@@ -96,21 +76,13 @@ namespace GameAndChill.Controllers
                 ViewBag.Error = Error;
                 return View("Error");
             }
-            // Validation
-            if (!ValidAnswer(answer1) || !ValidAnswer(answer2) || !ValidAnswer(answer3) || !ValidAnswer(answer4) || !ValidAnswer(answer5))
+
+            int[] answers = new int[] { answer1, answer2, answer3, answer4, answer5 };
+            if(QAMgmt.AddAnswer(id, answers) == false)
             {
                 ViewBag.Error = "One or more of your question submissions was invalid. Try Again.";
                 return View("Error");
             }
-            
-            // run the same method for different questions
-            AddQuestionToDB(id, answer1, 1);
-            AddQuestionToDB(id, answer2, 2);
-            AddQuestionToDB(id, answer3, 3);
-            AddQuestionToDB(id, answer4, 4);
-            AddQuestionToDB(id, answer5, 5);
-
-            ORM.SaveChanges();
 
             return RedirectToAction("Index", new { id });
         }
@@ -123,33 +95,20 @@ namespace GameAndChill.Controllers
                 ViewBag.Error = Error;
                 return View("Error");
             }
-            // pull users original answers
-            User currentUser = ORM.Users.Find(id);
-            List<Answer> found = currentUser.Answers.ToList();
 
+            // pass current user and their original answers to the view
+            ViewBag.CurrentUser = UserMgmt.GetUser(id);
+            ViewBag.Answers = UserMgmt.GetAnswers(id); // TODO: use this viewbag
+            
             // if user hasn't submitted their answers yet, redirect to Questions method
-            if (found.Count == 0)
+            if (ViewBag.Answers.Count == 0)
             {
                 return RedirectToAction("Questions", new { id });
             }
             
-            // pass current user and their original answers to the view
-            ViewBag.CurrentUser = currentUser;
-            ViewBag.Answers = found; // TODO: use this viewbag
-            
             return View();
         }
-        public void EditQuestionInDB(int id, int answer, int qNum)
-        {
-            // create Question object and define its properties
-            Answer q = new Answer();
-            q.UserID = id;
-            q.QuestionID = qNum;
-            q.Answer1 = answer;
-
-            // modify entry in DB
-            ORM.Entry(q).State = System.Data.Entity.EntityState.Modified;
-        }
+        
         public ActionResult SaveQuestionChanges(int id, int answer1, int answer2, int answer3, int answer4, int answer5)
         {
             if (!Validate.UserExists(id, out string Error))
@@ -157,19 +116,21 @@ namespace GameAndChill.Controllers
                 ViewBag.Error = Error;
                 return View("Error");
             }
-            // Validation
-            if (!ValidAnswer(answer1) || !ValidAnswer(answer2) || !ValidAnswer(answer3) || !ValidAnswer(answer4) || !ValidAnswer(answer5))
-            {
-                ViewBag.Error = "One or more of your question submissions was invalid. Try Again.";
-                return View("Error");
-            }
 
-            // modify each question
-            EditQuestionInDB(id, answer1, 1);
-            EditQuestionInDB(id, answer2, 2);
-            EditQuestionInDB(id, answer3, 3);
-            EditQuestionInDB(id, answer4, 4);
-            EditQuestionInDB(id, answer5, 5);
+            int[] answers = new int[] { answer1, answer2, answer3, answer4, answer5 };
+            for (int i = 0; i < 5; i++)
+            {
+                // Validation
+                if (!ValidAnswer(answers[i]))
+                {
+                    ViewBag.Error = "One or more of your question submissions was invalid. Try Again.";
+                    return View("Error");
+                }
+            }
+            for (int i = 0; i < 5; i++)
+            {
+                QAMgmt.EditAnswer(id, answers[i], i + 1);
+            }
 
             ORM.SaveChanges();
 
