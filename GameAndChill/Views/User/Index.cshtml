@@ -1,4 +1,5 @@
-﻿<br />
+﻿@{ViewBag.Title = ViewBag.CurrentUser.Name;}
+<br />
 <h2>Welcome, @ViewBag.CurrentUser.Name</h2>
 <section class=" with-title">
     <table class="table is-bordered is-center">
@@ -29,7 +30,7 @@
             }
         }
         @*foreach: List of saved games*@
-    </table >
+    </table>
 </section>
 
 <a href="/User/GameFinder?userID=@ViewBag.CurrentUser.ID">Find Game</a><br />

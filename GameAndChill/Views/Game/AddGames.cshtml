@@ -1,7 +1,6 @@
-﻿
-<br />
+﻿<br />
 @{
-    ViewBag.Title = "AddGames";
+    ViewBag.Title = "Add Games";
 }
 
 <h2>Add Games</h2><br /><br />
@@ -20,10 +19,11 @@
     function Checknumbers() {
         var start = document.getElementById("startID").value;
         var end = document.getElementById("endID").value;
-        if (start < 1 || end < 1) {
+        if (parseInt(start) < 1 || parseInt(end) < 1) {
+            document.getElementById("Error").innerHTML = "You cannot have negitive numbers.";
             return false;
         }
-        else if (end < start) {
+        else if (parseInt(end) < parseInt(start)) {
             document.getElementById("Error").innerHTML = "The latter must be greater than the former";
             return false;
         }

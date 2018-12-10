@@ -174,6 +174,11 @@ namespace GameAndChill.Controllers
         }
         public ActionResult AddGamesToDb(int startId, int endId)
         {
+            if(startId < 1 || endId < 1 || startId > endId)
+            {
+                ViewBag.Error = "Invalid startId or endId";
+                return View("Error");
+            }
             List<int> ids = new List<int>();
             for(int i =startId; i < endId +1; i++)
             {
@@ -342,9 +347,18 @@ namespace GameAndChill.Controllers
             return View();
         }
 
-        public ActionResult ListAllGames()
+        public ActionResult ListAllGames(string search)
         {
-            List<Game> listOfGames = ORM.Games.ToList();
+            List<Game> listOfGames;
+            if (search == null || search == "")
+            {
+                listOfGames = ORM.Games.ToList();
+            }
+            else
+            {
+                listOfGames = ORM.Games.Where(x => x.Name.Contains(search)).ToList();
+            }
+
             ViewBag.ListOfGames = listOfGames;
             return View();
         }
