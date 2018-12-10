@@ -22,7 +22,7 @@ namespace GameAndChill.Controllers
         }
         public ActionResult Details(int id, int? UserID)
         {
-            if (!Validate.GameExists(id, out string Error))
+            if (Validate.GameExists(id, out string Error) == false)
             {
                 ViewBag.Error = Error;
                 return View("Error");
@@ -32,8 +32,8 @@ namespace GameAndChill.Controllers
                 ViewBag.Error = Error;
                 return View("Error");
             }
-            ViewBag.Game = ORM.Games.Find(id);
-            ViewBag.User = ORM.Users.Find(UserID);
+            ViewBag.Game = GameInfo.FindGame(id);
+            ViewBag.User = UserMgmt.GetUser((int)UserID);
             return View();
         }
         public ActionResult GenreQuestions(int qID, int aID)
