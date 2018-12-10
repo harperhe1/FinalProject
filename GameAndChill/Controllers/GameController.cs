@@ -35,6 +35,7 @@ namespace GameAndChill.Controllers
         }
         public ActionResult GenreQuestions(int qID, int aID)
         {
+
             //ToDo:Question Validate & Answer Validate
             ViewBag.Question = ORM.Questions.Find(qID);
             ViewBag.Genres = GameMgmt.GetGenres();
