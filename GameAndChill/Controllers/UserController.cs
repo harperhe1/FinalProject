@@ -22,15 +22,15 @@ namespace GameAndChill.Controllers
                 return RedirectToAction("Index", "Home");
             }
 
+            // get user from DB, put in a viewbag
+            ViewBag.CurrentUser = UserMgmt.GetUser((int)id);
+
             // if the ID doesn't match a user in the database, return an error
-            if (!Validate.UserExists((int)id, out string Error))
+            if (ViewBag.CurrentUser == null)
             {
-                ViewBag.Error = Error;
+                ViewBag.Error = "User does not exist";
                 return View("Error");
             }
-
-            // pass user info to the view
-            ViewBag.CurrentUser = UserMgmt.GetUser((int)id);
 
             return View();
         }
@@ -53,27 +53,27 @@ namespace GameAndChill.Controllers
             return RedirectToAction("Questions", new { id });
         }
 
-
         
         public ActionResult Questions(int id)
         {
-            if (!Validate.UserExists(id, out string Error))
+            // get user from DB, put in a viewbag
+            ViewBag.CurrentUser = UserMgmt.GetUser(id);
+            
+            // if the ID doesn't match a user in the database, return an error
+            if (ViewBag.CurrentUser == null)
             {
-                ViewBag.Error = Error;
+                ViewBag.Error = "User does not exist";
                 return View("Error");
             }
 
-            // get user from DB
-            ViewBag.CurrentUser = UserMgmt.GetUser(id);
-
             return View();
         }
-        
         public ActionResult SubmitQuestions(int id, int answer1, int answer2, int answer3, int answer4, int answer5)
         {
-            if (!Validate.UserExists(id, out string Error))
+            // validate
+            if (UserMgmt.GetUser(id) == null)
             {
-                ViewBag.Error = Error;
+                ViewBag.Error = "User not found";
                 return View("Error");
             }
 
@@ -92,8 +92,6 @@ namespace GameAndChill.Controllers
 
             return RedirectToAction("Index", new { id });
         }
-
-
         public ActionResult EditAnswers(int id)
         {
             if (!Validate.UserExists(id, out string Error))
@@ -114,7 +112,6 @@ namespace GameAndChill.Controllers
             
             return View();
         }
-        
         public ActionResult SaveQuestionChanges(int id, int answer1, int answer2, int answer3, int answer4, int answer5)
         {
             if (!Validate.UserExists(id, out string Error))
@@ -138,15 +135,16 @@ namespace GameAndChill.Controllers
 
             return RedirectToAction("Index", new { id });
         }
-
+        
 
         public ActionResult GameFinder(int userID)
         {
-            if(!Validate.UserExists(userID,out string Error))
+            if(UserMgmt.GetUser(userID) == null)
             {
-                ViewBag.Error = Error;
+                ViewBag.Error = "User not found";
                 return View("Error");
             }
+
             //Game game = ORM.Games.Find(gameID);
             ConSoulFindGame alg = new ConSoulFindGame(userID);
             List<Game> games = alg.Result();
