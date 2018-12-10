@@ -48,5 +48,32 @@ namespace GameAndChill.Models
             ORM.SaveChanges();
             return true;
         }
+
+        public static bool LikeDislikeGame(int userID, int gameID, bool isLike)
+        {
+            if (GetUser(userID) == null)
+            {
+                return false;
+            }
+            
+            // check database if it's liked or disliked by this user
+            User_Game found = ORM.User_Game.Find(userID, gameID);
+            if (found == null)
+            {
+                // if not, create object and add to DB
+                User_Game userGame = new User_Game();
+                userGame.UserID = userID;
+                userGame.GameID = gameID;
+                userGame.IsLike = isLike;
+                ORM.User_Game.Add(userGame);
+            }
+            else
+            {
+                // set like status to isLike
+                found.IsLike = isLike;
+            }
+            ORM.SaveChanges();
+            return true;
+        }
     }
 }

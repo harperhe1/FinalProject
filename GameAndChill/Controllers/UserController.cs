@@ -186,23 +186,7 @@ namespace GameAndChill.Controllers
                 ViewBag.Error = Error;
                 return View("Error");
             }
-            // check database if it's liked or disliked by this user
-            User_Game found = ORM.User_Game.Find(userID, gameID);
-            if (found == null)
-            {
-                // if not, create object and add to DB
-                User_Game userGame = new User_Game();
-                userGame.UserID = userID;
-                userGame.GameID = gameID;
-                userGame.IsLike = isLike;
-                ORM.User_Game.Add(userGame);
-            }
-            else
-            {
-                // set like status to isLike
-                found.IsLike = isLike;
-            }
-            ORM.SaveChanges();
+            
 
             // return status message to the user (liked or disliked)
             string like = "";
