@@ -8,6 +8,18 @@ namespace GameAndChill.Models
     public partial class Game
     {
         public int Priority { get; set; }
+        public void DecreasePriority()
+        {
+            int toDecrease = Genres.Count - 3;
+            if (Priority > toDecrease)
+            {
+                Priority -= toDecrease;
+            }
+            else
+            {
+                Priority = 1;
+            }
+        }
     }
 
     public class ConSoulFindGame
@@ -61,6 +73,13 @@ namespace GameAndChill.Models
                             }
                         }
                     }
+                }
+            }
+            foreach (Game g in result)
+            {
+                if (g.Genres.Count > 3)
+                {
+                    g.DecreasePriority();
                 }
             }
             return result.OrderByDescending(g => g.Priority).ToList();
