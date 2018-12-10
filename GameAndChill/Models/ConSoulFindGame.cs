@@ -5,6 +5,11 @@ using System.Web;
 
 namespace GameAndChill.Models
 {
+    public partial class Game
+    {
+        public int Priority { get; set; }
+    }
+
     public class ConSoulFindGame
     {
         public ConSoulFindGame(int userID)

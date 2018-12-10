@@ -23,6 +23,10 @@ namespace GameAndChill.Models
         {
             return ORM.Users.Find(id);
         }
+        public static List<User> GetAllTheUsers()
+        {
+            return ORM.Users.ToList();
+        }
         public static List<Answer> GetAnswers(int id)
         {
             User currentUser = GetUser(id);

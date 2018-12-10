@@ -92,29 +92,32 @@ namespace GameAndChill.Controllers
         }
         public ActionResult EditAnswers(int id)
         {
-            if (!Validate.UserExists(id, out string Error))
+            // validate
+            User user = UserMgmt.GetUser(id);
+            if (user == null)
             {
-                ViewBag.Error = Error;
+                ViewBag.Error = "User not found";
                 return View("Error");
             }
 
             // pass current user and their original answers to the view
-            ViewBag.CurrentUser = UserMgmt.GetUser(id);
+            ViewBag.CurrentUser = user;
             ViewBag.Answers = UserMgmt.GetAnswers(id); // TODO: use this viewbag
-            
+
             // if user hasn't submitted their answers yet, redirect to Questions method
-            //if (ViewBag.Answers.Count == 0)
-            //{
-            //    return RedirectToAction("Questions", new { id });
-            //}
-            
+            if (ViewBag.Answers == null)
+            {
+                return RedirectToAction("Questions", new { id });
+            }
+
             return View();
         }
         public ActionResult SaveQuestionChanges(int id, int answer1, int answer2, int answer3, int answer4, int answer5)
         {
-            if (!Validate.UserExists(id, out string Error))
+            // validate
+            if (UserMgmt.GetUser(id) == null)
             {
-                ViewBag.Error = Error;
+                ViewBag.Error = "User not found";
                 return View("Error");
             }
 

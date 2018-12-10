@@ -194,7 +194,6 @@
     <Compile Include="Models\Platform.cs">
       <DependentUpon>GameAndChillDB.tt</DependentUpon>
     </Compile>
-    <Compile Include="Models\Priority.cs" />
     <Compile Include="Models\QAMgmt.cs" />
     <Compile Include="Models\Question.cs">
       <DependentUpon>GameAndChillDB.tt</DependentUpon>
@@ -209,7 +208,6 @@
     <Compile Include="Models\User_Game.cs">
       <DependentUpon>GameAndChillDB.tt</DependentUpon>
     </Compile>
-    <Compile Include="Models\Validate.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
