@@ -50,9 +50,8 @@ namespace GameAndChill.Models
                     // add to DB
                     ORM.Answers.Add(q);
                 }
+                ORM.SaveChanges();
             }
-
-            ORM.SaveChanges();
             return true;
         }
     }

@@ -105,10 +105,10 @@ namespace GameAndChill.Controllers
             ViewBag.Answers = UserMgmt.GetAnswers(id); // TODO: use this viewbag
             
             // if user hasn't submitted their answers yet, redirect to Questions method
-            if (ViewBag.Answers.Count == 0)
-            {
-                return RedirectToAction("Questions", new { id });
-            }
+            //if (ViewBag.Answers.Count == 0)
+            //{
+            //    return RedirectToAction("Questions", new { id });
+            //}
             
             return View();
         }
