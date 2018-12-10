@@ -28,18 +28,16 @@ namespace GameAndChill.Models
             User currentUser = GetUser(id);
             return currentUser.Answers.ToList();
         }
-        public static bool RemoveLike(int UserID, int GameID)
+        public static bool RemoveLike(int userID, int gameID)
         {
-            User user = GetUser(UserID);
-
             // check if user exists
-            if (user == null)
+            if (GetUser(userID) == null || GameInfo.FindGame(gameID) == null)
             {
                 return false;
             }
 
             // get entry in DB where the user liked or disliked a game, then remove it
-            User_Game ug = user.User_Game.Where(x => x.GameID == GameID).First();
+            User_Game ug = ORM.User_Game.Find(userID, gameID);
             if (ug != null)
             {
                 ORM.User_Game.Remove(ug);
@@ -49,10 +47,16 @@ namespace GameAndChill.Models
             return true;
         }
 
-        public static bool LikeDislikeGame(int userID, int gameID, bool isLike)
+        public static bool LikeDislikeGame(int userID, int gameID, bool isLike, out string status)
         {
             if (GetUser(userID) == null)
             {
+                status = "User not found";
+                return false;
+            }
+            if(GameInfo.FindGame(gameID) == null)
+            {
+                status = "Game not found";
                 return false;
             }
             
@@ -73,6 +77,47 @@ namespace GameAndChill.Models
                 found.IsLike = isLike;
             }
             ORM.SaveChanges();
+
+            string like = "";
+            if (isLike) { like = "liked"; }
+            else { like = "disliked"; }
+
+            status = $"Added to {like} games";
+            return true;
+        }
+
+        public static bool DeleteUser(int id, out string status)
+        {
+            //Find user ID
+            User userDelete = GetUser(id);
+
+            if (userDelete == null)
+            {
+                status = "User not found";
+                return false;
+            }
+
+            //Get their name
+            string name = userDelete.Name;
+
+            //Remove the user ID
+            var userGames = userDelete.User_Game.ToList();
+            foreach (User_Game user_Game in userGames)
+            {
+                ORM.User_Game.Remove(user_Game);
+            }
+            var userAnswers = userDelete.Answers.ToList();
+            foreach (Answer answer in userAnswers)
+            {
+                ORM.Answers.Remove(answer);
+            }
+            ORM.Users.Remove(userDelete);
+
+            //SaveChanges duhhhhhhhh (Kidding, for real though it does save the changes to the DB)
+            ORM.SaveChanges();
+
+            status = $"{name} has been deleted.";
+
             return true;
         }
     }

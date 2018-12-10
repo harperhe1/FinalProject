@@ -23,7 +23,6 @@ namespace GameAndChill.Controllers
             }
 
             // if the ID doesn't match a user in the database, return an error
-            User currentUser = ORM.Users.Find(id);
             if (!Validate.UserExists((int)id, out string Error))
             {
                 ViewBag.Error = Error;
@@ -31,7 +30,8 @@ namespace GameAndChill.Controllers
             }
 
             // pass user info to the view
-            ViewBag.CurrentUser = currentUser;
+            ViewBag.CurrentUser = UserMgmt.GetUser((int)id);
+
             return View();
         }
         public ActionResult SignUp()
@@ -180,54 +180,29 @@ namespace GameAndChill.Controllers
 
         public ActionResult LikeGame(bool isLike, int userID, int gameID)
         {
-            string Error;
-            if (!Validate.UserExists(userID, out Error) || !Validate.GameExists(gameID, out Error))
+            string status;
+            if (UserMgmt.LikeDislikeGame(userID, gameID, isLike, out status) == false)
             {
-                ViewBag.Error = Error;
+                ViewBag.Error = status;
                 return View("Error");
             }
             
-
             // return status message to the user (liked or disliked)
-            string like = "";
-            if (isLike) { like = "liked"; }
-            else { like = "disliked"; }
-            TempData["IsLike"] = $"Added to {like} games";
+            TempData["IsLike"] = status;
 
             return RedirectToAction("GameFinder", new { userID });
         }
+
         public ActionResult DeleteUser(int id) //Delete a user from the database
         {
-            if (!Validate.UserExists(id, out string Error))
+            if (UserMgmt.DeleteUser(id, out string status) == false)
             {
-                ViewBag.Error = Error;
+                ViewBag.Error = status;
                 return View("Error");
             }
-            //Find user ID
-            User userDelete = ORM.Users.Find(id);
-            
-
-            //Get their name
-            string name = userDelete.Name;
-
-            //Remove the user ID
-            var userGames = userDelete.User_Game.ToList();
-            foreach (User_Game user_Game in  userGames)
-            {
-                ORM.User_Game.Remove(user_Game);
-            }
-            var userAnswers = userDelete.Answers.ToList();
-            foreach(Answer answer in userAnswers)
-            {
-                ORM.Answers.Remove(answer);
-            }
-            ORM.Users.Remove(userDelete);
-
-            //SaveChanges duhhhhhhhh (Kidding, for real though it does save the changes to the DB)
-            ORM.SaveChanges();
 
             // Send their name back to the view
-            TempData["Eulogy"] = $"{name} has been deleted.";
+            TempData["Eulogy"] = status;
 
             return RedirectToAction("Index", "Home");
         }
