@@ -183,10 +183,11 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>GameAndChillDB.edmx</DependentUpon>
     </Compile>
-    <Compile Include="Models\GameInfo.cs" />
+    <Compile Include="Models\GameMgmt.cs" />
     <Compile Include="Models\Genre.cs">
       <DependentUpon>GameAndChillDB.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\IGDB.cs" />
     <Compile Include="Models\Keyword.cs">
       <DependentUpon>GameAndChillDB.tt</DependentUpon>
     </Compile>

@@ -31,7 +31,7 @@ namespace GameAndChill.Models
         public static bool RemoveLike(int userID, int gameID)
         {
             // check if user exists
-            if (GetUser(userID) == null || GameInfo.FindGame(gameID) == null)
+            if (GetUser(userID) == null || GameMgmt.GetGame(gameID) == null)
             {
                 return false;
             }
@@ -54,7 +54,7 @@ namespace GameAndChill.Models
                 status = "User not found";
                 return false;
             }
-            if(GameInfo.FindGame(gameID) == null)
+            if(GameMgmt.GetGame(gameID) == null)
             {
                 status = "Game not found";
                 return false;

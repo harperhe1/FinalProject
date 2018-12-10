@@ -8,6 +8,10 @@ namespace GameAndChill.Models
     public class QAMgmt
     {
         static GameAndChillDBEntities ORM = new GameAndChillDBEntities();
+        public static List<Question> GetQuestions()
+        {
+            return ORM.Questions.ToList();
+        }
         public static bool ValidAnswer(int q)
         {
             // Check if the answer passed in is between 1 and 5. If not, we don't want that in our database and messing anything up!
