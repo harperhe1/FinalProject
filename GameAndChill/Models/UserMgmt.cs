@@ -28,5 +28,25 @@ namespace GameAndChill.Models
             User currentUser = GetUser(id);
             return currentUser.Answers.ToList();
         }
+        public static bool RemoveLike(int UserID, int GameID)
+        {
+            User user = GetUser(UserID);
+
+            // check if user exists
+            if (user == null)
+            {
+                return false;
+            }
+
+            // get entry in DB where the user liked or disliked a game, then remove it
+            User_Game ug = user.User_Game.Where(x => x.GameID == GameID).First();
+            if (ug != null)
+            {
+                ORM.User_Game.Remove(ug);
+            }
+
+            ORM.SaveChanges();
+            return true;
+        }
     }
 }

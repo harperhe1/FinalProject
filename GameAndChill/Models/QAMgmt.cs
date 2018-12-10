@@ -8,28 +8,6 @@ namespace GameAndChill.Models
     public class QAMgmt
     {
         static GameAndChillDBEntities ORM = new GameAndChillDBEntities();
-        public static void AddAnswer(int UserID, int answer, int qNum)
-        {
-            // create Question object and define its properties
-            Answer q = new Answer();
-            q.UserID = UserID;
-            q.QuestionID = qNum;
-            q.Answer1 = answer;
-
-            // add to DB
-            ORM.Answers.Add(q);
-        }
-        public static void EditAnswer(int UserID, int answer, int qNum)
-        {
-            // create Question object and define its properties
-            Answer q = new Answer();
-            q.UserID = UserID;
-            q.QuestionID = qNum;
-            q.Answer1 = answer;
-
-            // modify entry in DB
-            ORM.Entry(q).State = System.Data.Entity.EntityState.Modified;
-        }
         public static bool ValidAnswer(int q)
         {
             // Check if the answer passed in is between 1 and 5. If not, we don't want that in our database and messing anything up!
@@ -39,7 +17,7 @@ namespace GameAndChill.Models
             }
             return false;
         }
-        public static bool AddAnswer(int UserID, int[] answers)
+        public static bool ManageAnswers(int UserID, int[] answers, bool exists)
         {
             for (int i = 0; i < 5; i++)
             {
@@ -49,10 +27,25 @@ namespace GameAndChill.Models
                     return false;
                 }
             }
-
+            
             for (int i = 0; i < 5; i++)
             {
-                AddAnswer(UserID, answers[i], i + 1);
+                // create Question object and define its properties
+                Answer q = new Answer();
+                q.UserID = UserID;
+                q.QuestionID = i+1;
+                q.Answer1 = answers[i];
+
+                if (exists)
+                {
+                    // modify entry in DB
+                    ORM.Entry(q).State = System.Data.Entity.EntityState.Modified;
+                }
+                else
+                {
+                    // add to DB
+                    ORM.Answers.Add(q);
+                }
             }
 
             ORM.SaveChanges();

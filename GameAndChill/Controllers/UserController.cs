@@ -77,8 +77,14 @@ namespace GameAndChill.Controllers
                 return View("Error");
             }
 
+            // tell QAMgmt to add entries and not edit them
+            bool exists = false;
+
+            // put answers in an array
             int[] answers = new int[] { answer1, answer2, answer3, answer4, answer5 };
-            if(QAMgmt.AddAnswer(id, answers) == false)
+
+            // send data to QAMgmt, go to error page if validation fails
+            if (QAMgmt.ManageAnswers(id, answers, exists) == false)
             {
                 ViewBag.Error = "One or more of your question submissions was invalid. Try Again.";
                 return View("Error");
@@ -117,22 +123,18 @@ namespace GameAndChill.Controllers
                 return View("Error");
             }
 
-            int[] answers = new int[] { answer1, answer2, answer3, answer4, answer5 };
-            for (int i = 0; i < 5; i++)
-            {
-                // Validation
-                if (!ValidAnswer(answers[i]))
-                {
-                    ViewBag.Error = "One or more of your question submissions was invalid. Try Again.";
-                    return View("Error");
-                }
-            }
-            for (int i = 0; i < 5; i++)
-            {
-                QAMgmt.EditAnswer(id, answers[i], i + 1);
-            }
+            // tell QAMgmt to edit entries and not add them
+            bool exists = true;
 
-            ORM.SaveChanges();
+            // put answers in an array
+            int[] answers = new int[] { answer1, answer2, answer3, answer4, answer5 };
+
+            // send data to QAMgmt, go to error page if validation fails
+            if (QAMgmt.ManageAnswers(id, answers, exists) == false)
+            {
+                ViewBag.Error = "One or more of your question submissions was invalid. Try Again.";
+                return View("Error");
+            }
 
             return RedirectToAction("Index", new { id });
         }
@@ -161,22 +163,21 @@ namespace GameAndChill.Controllers
             ViewBag.CurrentUser = alg.User;
             return View();
         }
+
+
+
         public ActionResult RemoveGame(int UserID, int GameID)
         {
-            if (!Validate.UserExists(UserID,out string Error))
+            if (UserMgmt.RemoveLike(UserID, GameID) == false)
             {
-                ViewBag.Error = Error;
+                ViewBag.Error = "User not found";
                 return View("Error");
             }
-            User user = ORM.Users.Find(UserID);
-            User_Game ug = user.User_Game.Where(x => x.GameID == GameID).First();
-            if (ug != null)
-            {
-                ORM.User_Game.Remove(ug);
-            }
-            ORM.SaveChanges();
+            
             return RedirectToAction("Index", new {id =  UserID });
         }
+
+
         public ActionResult LikeGame(bool isLike, int userID, int gameID)
         {
             string Error;
