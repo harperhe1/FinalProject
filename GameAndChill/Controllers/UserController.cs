@@ -9,8 +9,6 @@ namespace GameAndChill.Controllers
 {
     public class UserController : Controller
     {
-        GameAndChillDBEntities ORM = new GameAndChillDBEntities();
-        
         // GET: User
         public ActionResult Index(int? id)
         {

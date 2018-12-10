@@ -8,10 +8,34 @@ namespace GameAndChill.Models
     public class QAMgmt
     {
         static GameAndChillDBEntities ORM = new GameAndChillDBEntities();
-        public static List<Question> GetQuestions()
+
+        // GET
+        public static Question GetQuestion(int id)
+        {
+            return ORM.Questions.Find(id);
+        }
+        public static List<Question> GetAllQuestions()
         {
             return ORM.Questions.ToList();
         }
+        public static List<bool> GenreCheckboxes(int qID, int aID)
+        {
+            List<bool> Checked = new List<bool>();
+            foreach (var genre in ORM.Genres)
+            {
+                if (genre.Question_Genre.Where(x => x.QuestionID == qID && x.Answer == aID).Count() != 0)
+                {
+                    Checked.Add(true);
+                }
+                else
+                {
+                    Checked.Add(false);
+                }
+            }
+            return Checked;
+        }
+
+        // POST
         public static bool ValidAnswer(int q)
         {
             // Check if the answer passed in is between 1 and 5. If not, we don't want that in our database and messing anything up!
@@ -53,6 +77,33 @@ namespace GameAndChill.Models
                 ORM.SaveChanges();
             }
             return true;
+        }
+        public static void CorrolateQuestions(List<bool> IsGenre, int qID, int aID)
+        {
+            List<Genre> Genres = ORM.Genres.ToList();
+            int temp = 0;
+            for (int i = 0; i < Genres.Count(); i++)
+            {
+                Question_Genre gQ = ORM.Question_Genre.Find(qID, Genres[i].ID, aID);
+                if (IsGenre[temp])
+                {
+                    if (gQ == null)
+                    {
+                        gQ = new Question_Genre { QuestionID = qID, GenreID = Genres[i].ID, Answer = aID };
+                        ORM.Question_Genre.Add(gQ);
+                    }
+                    temp++;
+                }
+                else
+                {
+                    if (gQ != null)
+                    {
+                        ORM.Question_Genre.Remove(gQ);
+                    }
+                }
+                temp++;
+            }
+            ORM.SaveChanges();
         }
     }
 }

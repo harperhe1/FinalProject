@@ -19,78 +19,60 @@ namespace GameAndChill.Controllers
         }
         public ActionResult Details(int id, int UserID)
         {
-            if (Validate.GameExists(id, out string Error) == false)
+            User user = UserMgmt.GetUser(UserID);
+            if (user == null)
             {
-                ViewBag.Error = Error;
+                ViewBag.Error = "User not found";
                 return View("Error");
             }
-            if (!Validate.UserExists((int)UserID,out Error))
+
+            Game game = GameMgmt.GetGame(id);
+            if (game == null)
             {
-                ViewBag.Error = Error;
+                ViewBag.Error = "Game not found";
                 return View("Error");
             }
-            ViewBag.Game = GameMgmt.GetGame(id);
-            ViewBag.User = UserMgmt.GetUser((int)UserID);
+
+            ViewBag.Game = game;
+            ViewBag.User = user;
             return View();
         }
         public ActionResult GameListDetails(int id)
         {
-            ViewBag.Game = GameMgmt.GetGame(id);
+            Game game = GameMgmt.GetGame(id);
+            if (game == null)
+            {
+                ViewBag.Error = "Game not found";
+                return View("Error");
+            }
+
+            ViewBag.Game = game;
             return View("Details");
         }
         public ActionResult GenreQuestions(int qID, int aID)
         {
+            // if either parameters are out of range, error
+            // need to change this if we ever have more than 5 questions or more than 5 answers. -David
+            if (!QAMgmt.ValidAnswer(qID) || !QAMgmt.ValidAnswer(aID))
+            {
+                ViewBag.Error = "Index out of range. Try again";
+                return View("Error");
+            }
 
-            //ToDo:Question Validate & Answer Validate
-            ViewBag.Question = ORM.Questions.Find(qID);
+            ViewBag.Question = QAMgmt.GetQuestion(qID);
             ViewBag.Genres = GameMgmt.GetGenres();
             ViewBag.Answer = aID;
-            List<bool> Checked = new List<bool>();
-            foreach( var genre in ORM.Genres)
-            {
-                if(genre.Question_Genre.Where(x => x.QuestionID == qID && x.Answer == aID).Count() != 0)
-                {
-                    Checked.Add(true);
-                }
-                else
-                {
-                    Checked.Add(false);
-                }
-            }
-            ViewBag.IsChecked = Checked;
+            ViewBag.IsChecked = QAMgmt.GenreCheckboxes(qID, aID);
+
             return View();
         }
         public ActionResult SetGenreQuestions(int qID, int aID, IEnumerable<bool> GenreName)
         {
             List<bool> IsGenre = GenreName.ToList();
-            List<Genre> Genres = ORM.Genres.ToList();
-            int temp = 0;
-            for(int i =0; i < Genres.Count(); i++)
-            {
-                Question_Genre gQ = ORM.Question_Genre.Find(  qID,Genres[i].ID, aID );
-                if (IsGenre[temp])
-                {
-                    if(gQ == null)
-                    {
-                        gQ = new Question_Genre { QuestionID = qID, GenreID = Genres[i].ID, Answer = aID };
-                        ORM.Question_Genre.Add(gQ);
-                    }
-                    temp++;
-                }
-                else
-                {
-                    if(gQ != null)
-                    {
-                        ORM.Question_Genre.Remove(gQ);
-                    }
-                }
-            temp++;
-            }
-            ORM.SaveChanges();
+            QAMgmt.CorrolateQuestions(IsGenre, qID, aID);
+
             return RedirectToAction("Index");
         }
-                GameAndChillDBEntities ORM = new GameAndChillDBEntities();
-
         
 
         public ActionResult AddGames()
@@ -141,7 +123,7 @@ namespace GameAndChill.Controllers
 
         public ActionResult EditGenres()
         {
-            ViewBag.Questions = QAMgmt.GetQuestions();
+            ViewBag.Questions = QAMgmt.GetAllQuestions();
             return View();
         }
 
