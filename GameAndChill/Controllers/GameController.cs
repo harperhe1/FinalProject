@@ -17,14 +17,14 @@ namespace GameAndChill.Controllers
         {
             return View();
         }
-        public ActionResult Details(int id, int? UserID)
+        public ActionResult Details(int id, int UserID)
         {
             if (Validate.GameExists(id, out string Error) == false)
             {
                 ViewBag.Error = Error;
                 return View("Error");
             }
-            if (UserID.HasValue && !Validate.UserExists((int)UserID,out Error))
+            if (!Validate.UserExists((int)UserID,out Error))
             {
                 ViewBag.Error = Error;
                 return View("Error");
@@ -32,6 +32,11 @@ namespace GameAndChill.Controllers
             ViewBag.Game = GameMgmt.GetGame(id);
             ViewBag.User = UserMgmt.GetUser((int)UserID);
             return View();
+        }
+        public ActionResult GameListDetails(int id)
+        {
+            ViewBag.Game = GameMgmt.GetGame(id);
+            return View("Details");
         }
         public ActionResult GenreQuestions(int qID, int aID)
         {
