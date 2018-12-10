@@ -40,7 +40,7 @@ namespace GameAndChill.Controllers
         {
             //ToDo:Question Validate & Answer Validate
             ViewBag.Question = ORM.Questions.Find(qID);
-            ViewBag.Genres = ORM.Genres.ToList();
+            ViewBag.Genres = GameInfo.GetGenres();
             ViewBag.Answer = aID;
             List<bool> Checked = new List<bool>();
             foreach( var genre in ORM.Genres)
