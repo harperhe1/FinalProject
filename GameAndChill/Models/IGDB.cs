@@ -12,8 +12,7 @@ namespace GameAndChill.Models
     {
         static string APIKey = System.Configuration.ConfigurationManager.AppSettings["user-key"];
         static string expander = "?expand=keywords,platforms,genres&fields=name,summary,url,cover,keywords.name,platforms.name,genres.name";
-
-        static GameAndChillDBEntities ORM = new GameAndChillDBEntities();
+        
         // Call this method whenever we want to get a JObject of a specific game
         public static JObject GetGameByID(int id)
         {

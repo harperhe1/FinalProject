@@ -37,7 +37,7 @@ namespace GameAndChill.Models
         {
             // add one game
             GameToDB(IGDB.GetGameByID(gameId));
-            ORM.SaveChanges();
+            SaveAndRefresh();
         }
         public static bool AddGame(int startId, int endId)
         {
@@ -63,7 +63,7 @@ namespace GameAndChill.Models
                     GameToDB(game);
                 }
             }
-            ORM.SaveChanges();
+            SaveAndRefresh();
 
             return true;
         }
@@ -80,7 +80,7 @@ namespace GameAndChill.Models
             {
                 GenreToDB(genre);
             }
-            ORM.SaveChanges();
+            SaveAndRefresh();
 
             return true;
         }
@@ -161,6 +161,10 @@ namespace GameAndChill.Models
             }
         }
 
-
+        static void SaveAndRefresh()
+        {
+            ORM.SaveChanges();
+            ORM = new GameAndChillDBEntities();
+        }
     }
 }

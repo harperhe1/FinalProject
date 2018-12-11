@@ -12,7 +12,7 @@ namespace GameAndChill.Models
         {
             // add to DB
             ORM.Users.Add(newUser);
-            ORM.SaveChanges();
+            SaveAndRefresh();
 
             // get the ID of our new user
             int id = ORM.Users.Where(x => x.Name == newUser.Name).ToList().Last().ID;
@@ -46,8 +46,7 @@ namespace GameAndChill.Models
             {
                 ORM.User_Game.Remove(ug);
             }
-
-            ORM.SaveChanges();
+            SaveAndRefresh();
             return true;
         }
 
@@ -80,7 +79,7 @@ namespace GameAndChill.Models
                 // set like status to isLike
                 found.IsLike = isLike;
             }
-            ORM.SaveChanges();
+            SaveAndRefresh();
 
             string like = "";
             if (isLike) { like = "liked"; }
@@ -118,11 +117,16 @@ namespace GameAndChill.Models
             ORM.Users.Remove(userDelete);
 
             //SaveChanges duhhhhhhhh (Kidding, for real though it does save the changes to the DB)
-            ORM.SaveChanges();
+            SaveAndRefresh();
 
             status = $"{name} has been deleted.";
 
             return true;
+        }
+        static void SaveAndRefresh()
+        {
+            ORM.SaveChanges();
+            ORM = new GameAndChillDBEntities();
         }
     }
 }

@@ -74,7 +74,7 @@ namespace GameAndChill.Models
                     // add to DB
                     ORM.Answers.Add(q);
                 }
-                ORM.SaveChanges();
+                SaveAndRefresh();
             }
             return true;
         }
@@ -103,7 +103,12 @@ namespace GameAndChill.Models
                 }
                 temp++;
             }
+            SaveAndRefresh();
+        }
+        static void SaveAndRefresh()
+        {
             ORM.SaveChanges();
+            ORM = new GameAndChillDBEntities();
         }
     }
 }
