@@ -123,5 +123,39 @@ namespace GameAndChill.Models
             // return false if something goes wrong with the request/response
             return null;
         }
+
+
+        // WIP
+        public static JArray Get50GamesByGenre(int genreID)
+        {
+            string newExpander = "";
+
+            //make our resquest
+            // TODO: Create the correct request
+            // We need the top 50 games from a genre, ordered by rating. Possibly older than 2000 if we want to stick to retro.
+            HttpWebRequest request = WebRequest.CreateHttp($"https://api-endpoint.igdb.com/games/{newExpander}");
+
+            request.Headers.Add("user-key", APIKey);
+            request.Accept = "application/json";
+            //make our response
+            HttpWebResponse response = (HttpWebResponse)request.GetResponse();
+
+            if (response.StatusCode == HttpStatusCode.OK)
+            {
+                //get response stream
+                StreamReader reader = new StreamReader(response.GetResponseStream());
+
+                //read response stream as string
+                string output = reader.ReadToEnd();
+
+                //convert response to JSon
+                JArray GameInfo = JArray.Parse(output);
+                reader.Close();
+
+                return GameInfo;
+            }
+            // return null if something goes wrong with the request/response
+            return null;
+        }
     }
 }

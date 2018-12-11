@@ -10,7 +10,7 @@ namespace GameAndChill.Models
         public int Priority { get; set; }
         public void DecreasePriority()
         {
-            int toDecrease = Genres.Count - 3;
+            int toDecrease = (Genres.Count -3)/2;
             if (Priority > toDecrease)
             {
                 Priority -= toDecrease;
@@ -65,6 +65,7 @@ namespace GameAndChill.Models
                 List<Genre> list = GetGenresFromAnswer(a);
                 foreach (Genre g in list)
                 {
+
                     // get every game that has that genre
                     foreach (Game game in g.Games)
                     {
@@ -91,7 +92,7 @@ namespace GameAndChill.Models
 
                 // if game has more than 3 genres, modify priority
                 // TODO: decide if it should be 3 or 4
-                if (result[i].Genres.Count > 3)
+                if (result[i].Genres.Count > 4)
                 {
                     result[i].DecreasePriority();
                 }
