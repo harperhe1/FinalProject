@@ -21,6 +21,10 @@ namespace GameAndChill.Models
             }
         }
     }
+    public partial class Genre
+    {
+        public int Priority { get; set; } = 1;
+    }
 
     public class ConSoulFindGame
     {
@@ -58,24 +62,38 @@ namespace GameAndChill.Models
 
             // TODO: Priority Queue
             List<Game> result = new List<Game>();
-            
+            HashSet<Genre> genres = new HashSet<Genre>();
+
             foreach (Answer a in User.Answers)
             {
                 // get every genre that corrolates with the user's answer
                 List<Genre> list = GetGenresFromAnswer(a);
                 foreach (Genre g in list)
                 {
-
-                    // get every game that has that genre
-                    foreach (Game game in g.Games)
+                    g.Priority++;
+                    if(!genres.Contains(g))
                     {
-                        // only add unique games; increment priority every time it shows up
-                        game.Priority++;
-                        if (game.Priority == 1)
-                        {
-                            result.Add(game);
-                        }
+                        genres.Add(g);
                     }
+                }
+            }
+            // get every game that has that genre
+            int j = 0;
+            foreach (Genre genre in genres.OrderByDescending(g => g.Priority))
+            {
+                j++;
+                foreach (Game game in genre.Games)
+                {
+                    // only add unique games; increment priority every time it shows up
+                    game.Priority += genre.Priority;
+                    if (game.Priority == genre.Priority)
+                    {
+                        result.Add(game);
+                    }
+                }
+                if (j >= 3)
+                {
+                    break;
                 }
             }
 
@@ -104,5 +122,9 @@ namespace GameAndChill.Models
             return result.OrderBy(g => r.Next()).OrderByDescending(g => g.Priority).ToList();
         }
 
+        public void MethodName(string x, ref string y)
+        {
+           
+        }
     }
 }
