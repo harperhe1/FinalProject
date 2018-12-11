@@ -11,21 +11,11 @@ namespace GameAndChill.Controllers
     {
 
         // TODO: Do more Css on Home Pages
-        GameAndChillDBEntities ORM = new GameAndChillDBEntities();
-        static bool ValidateUser(int userID)
-        {
-
-            return true;
-        }
         public ActionResult Index()
         {
             // display list of users
 
-            ViewBag.Users = ORM.Users.ToList();
-            if(ORM.Genres.Count() == 0)
-            {
-                return RedirectToAction("AddGenresToDB", "Game");
-            }
+            ViewBag.Users = UserMgmt.GetAllTheUsers();
             return View();
 
         }

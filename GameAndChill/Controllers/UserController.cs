@@ -9,8 +9,6 @@ namespace GameAndChill.Controllers
 {
     public class UserController : Controller
     {
-        GameAndChillDBEntities ORM = new GameAndChillDBEntities();
-        
         // GET: User
         public ActionResult Index(int? id)
         {
@@ -22,16 +20,16 @@ namespace GameAndChill.Controllers
                 return RedirectToAction("Index", "Home");
             }
 
+            // get user from DB, put in a viewbag
+            ViewBag.CurrentUser = UserMgmt.GetUser((int)id);
+
             // if the ID doesn't match a user in the database, return an error
-            User currentUser = ORM.Users.Find(id);
-            if (!Validate.UserExists((int)id, out string Error))
+            if (ViewBag.CurrentUser == null)
             {
-                ViewBag.Error = Error;
+                ViewBag.Error = "User does not exist";
                 return View("Error");
             }
 
-            // pass user info to the view
-            ViewBag.CurrentUser = currentUser;
             return View();
         }
         public ActionResult SignUp()
@@ -40,150 +38,114 @@ namespace GameAndChill.Controllers
         }
         public ActionResult AddUser(User newUser)
         {
-            int id;
+            
             if(newUser.Name == null || newUser.Name == "") //used empty string in case it couldn't do null
             {
                 ViewBag.Error = "Must have a name";
                 return View("Error");
             }
-            // add to DB
-            ORM.Users.Add(newUser);
-            ORM.SaveChanges();
 
-            // get the ID of our new user; send to viewbag
-            User u = ORM.Users.Where(x => x.Name == newUser.Name).ToList().Last();
-            id = u.ID;
+            // add to DB, then get the ID of our new user
+            int id = UserMgmt.AddUserReturnID(newUser);
 
             return RedirectToAction("Questions", new { id });
         }
 
-
-        public bool ValidAnswer(int q)
-        {
-            // Check if the answer passed in is between 1 and 5. If not, we don't want that in our database and messing anything up!
-            if (q <= 5 && q >= 1)
-            {
-                return true;
-            }
-            return false;
-        }
+        
         public ActionResult Questions(int id)
         {
-            if (!Validate.UserExists(id, out string Error))
+            // get user from DB, put in a viewbag
+            ViewBag.CurrentUser = UserMgmt.GetUser(id);
+            
+            // if the ID doesn't match a user in the database, return an error
+            if (ViewBag.CurrentUser == null)
             {
-                ViewBag.Error = Error;
+                ViewBag.Error = "User does not exist";
                 return View("Error");
             }
-            User currentUser = ORM.Users.Find(id);
-            ViewBag.CurrentUser = currentUser;
-            return View();
-        }
-        public void AddQuestionToDB(int id, int answer, int qNum)
-        {
-            // create Question object and define its properties
-            Answer q = new Answer();
-            q.UserID = id;
-            q.QuestionID = qNum;
-            q.Answer1 = answer;
 
-            // add to DB
-            ORM.Answers.Add(q);
+            return View();
         }
         public ActionResult SubmitQuestions(int id, int answer1, int answer2, int answer3, int answer4, int answer5)
         {
-            if (!Validate.UserExists(id, out string Error))
+            // validate
+            if (UserMgmt.GetUser(id) == null)
             {
-                ViewBag.Error = Error;
+                ViewBag.Error = "User not found";
                 return View("Error");
             }
-            // Validation
-            if (!ValidAnswer(answer1) || !ValidAnswer(answer2) || !ValidAnswer(answer3) || !ValidAnswer(answer4) || !ValidAnswer(answer5))
+
+            // tell QAMgmt to add entries and not edit them
+            bool exists = false;
+
+            // put answers in an array
+            int[] answers = new int[] { answer1, answer2, answer3, answer4, answer5 };
+
+            // send data to QAMgmt, go to error page if validation fails
+            if (QAMgmt.ManageAnswers(id, answers, exists) == false)
             {
                 ViewBag.Error = "One or more of your question submissions was invalid. Try Again.";
                 return View("Error");
             }
-            
-            // run the same method for different questions
-            AddQuestionToDB(id, answer1, 1);
-            AddQuestionToDB(id, answer2, 2);
-            AddQuestionToDB(id, answer3, 3);
-            AddQuestionToDB(id, answer4, 4);
-            AddQuestionToDB(id, answer5, 5);
-
-            ORM.SaveChanges();
 
             return RedirectToAction("Index", new { id });
         }
-
-
         public ActionResult EditAnswers(int id)
         {
-            if (!Validate.UserExists(id, out string Error))
+            // validate
+            User user = UserMgmt.GetUser(id);
+            if (user == null)
             {
-                ViewBag.Error = Error;
+                ViewBag.Error = "User not found";
                 return View("Error");
             }
-            // pull users original answers
-            User currentUser = ORM.Users.Find(id);
-            List<Answer> found = currentUser.Answers.ToList();
+
+            // pass current user and their original answers to the view
+            ViewBag.CurrentUser = user;
+            ViewBag.Answers = UserMgmt.GetAnswers(id); // TODO: use this viewbag
 
             // if user hasn't submitted their answers yet, redirect to Questions method
-            if (found.Count == 0)
+            if (ViewBag.Answers == null)
             {
                 return RedirectToAction("Questions", new { id });
             }
-            
-            // pass current user and their original answers to the view
-            ViewBag.CurrentUser = currentUser;
-            ViewBag.Answers = found; // TODO: use this viewbag
-            
-            return View();
-        }
-        public void EditQuestionInDB(int id, int answer, int qNum)
-        {
-            // create Question object and define its properties
-            Answer q = new Answer();
-            q.UserID = id;
-            q.QuestionID = qNum;
-            q.Answer1 = answer;
 
-            // modify entry in DB
-            ORM.Entry(q).State = System.Data.Entity.EntityState.Modified;
+            return View();
         }
         public ActionResult SaveQuestionChanges(int id, int answer1, int answer2, int answer3, int answer4, int answer5)
         {
-            if (!Validate.UserExists(id, out string Error))
+            // validate
+            if (UserMgmt.GetUser(id) == null)
             {
-                ViewBag.Error = Error;
+                ViewBag.Error = "User not found";
                 return View("Error");
             }
-            // Validation
-            if (!ValidAnswer(answer1) || !ValidAnswer(answer2) || !ValidAnswer(answer3) || !ValidAnswer(answer4) || !ValidAnswer(answer5))
+
+            // tell QAMgmt to edit entries and not add them
+            bool exists = true;
+
+            // put answers in an array
+            int[] answers = new int[] { answer1, answer2, answer3, answer4, answer5 };
+
+            // send data to QAMgmt, go to error page if validation fails
+            if (QAMgmt.ManageAnswers(id, answers, exists) == false)
             {
                 ViewBag.Error = "One or more of your question submissions was invalid. Try Again.";
                 return View("Error");
             }
 
-            // modify each question
-            EditQuestionInDB(id, answer1, 1);
-            EditQuestionInDB(id, answer2, 2);
-            EditQuestionInDB(id, answer3, 3);
-            EditQuestionInDB(id, answer4, 4);
-            EditQuestionInDB(id, answer5, 5);
-
-            ORM.SaveChanges();
-
             return RedirectToAction("Index", new { id });
         }
-
+        
 
         public ActionResult GameFinder(int userID)
         {
-            if(!Validate.UserExists(userID,out string Error))
+            if(UserMgmt.GetUser(userID) == null)
             {
-                ViewBag.Error = Error;
+                ViewBag.Error = "User not found";
                 return View("Error");
             }
+
             //Game game = ORM.Games.Find(gameID);
             ConSoulFindGame alg = new ConSoulFindGame(userID);
             List<Game> games = alg.Result();
@@ -200,88 +162,46 @@ namespace GameAndChill.Controllers
             ViewBag.CurrentUser = alg.User;
             return View();
         }
+
+
+
         public ActionResult RemoveGame(int UserID, int GameID)
         {
-            if (!Validate.UserExists(UserID,out string Error))
+            if (UserMgmt.RemoveLike(UserID, GameID) == false)
             {
-                ViewBag.Error = Error;
+                ViewBag.Error = "User not found";
                 return View("Error");
             }
-            User user = ORM.Users.Find(UserID);
-            User_Game ug = user.User_Game.Where(x => x.GameID == GameID).First();
-            if (ug != null)
-            {
-                ORM.User_Game.Remove(ug);
-            }
-            ORM.SaveChanges();
+            
             return RedirectToAction("Index", new {id =  UserID });
         }
+
+
         public ActionResult LikeGame(bool isLike, int userID, int gameID)
         {
-            string Error;
-            if (!Validate.UserExists(userID, out Error) || !Validate.GameExists(gameID, out Error))
+            string status;
+            if (UserMgmt.LikeDislikeGame(userID, gameID, isLike, out status) == false)
             {
-                ViewBag.Error = Error;
+                ViewBag.Error = status;
                 return View("Error");
             }
-            // check database if it's liked or disliked by this user
-            User_Game found = ORM.User_Game.Find(userID, gameID);
-            if (found == null)
-            {
-                // if not, create object and add to DB
-                User_Game userGame = new User_Game();
-                userGame.UserID = userID;
-                userGame.GameID = gameID;
-                userGame.IsLike = isLike;
-                ORM.User_Game.Add(userGame);
-            }
-            else
-            {
-                // set like status to isLike
-                found.IsLike = isLike;
-            }
-            ORM.SaveChanges();
-
+            
             // return status message to the user (liked or disliked)
-            string like = "";
-            if (isLike) { like = "liked"; }
-            else { like = "disliked"; }
-            TempData["IsLike"] = $"Added to {like} games";
+            TempData["IsLike"] = status;
 
             return RedirectToAction("GameFinder", new { userID });
         }
+
         public ActionResult DeleteUser(int id) //Delete a user from the database
         {
-            if (!Validate.UserExists(id, out string Error))
+            if (UserMgmt.DeleteUser(id, out string status) == false)
             {
-                ViewBag.Error = Error;
+                ViewBag.Error = status;
                 return View("Error");
             }
-            //Find user ID
-            User userDelete = ORM.Users.Find(id);
-            
-
-            //Get their name
-            string name = userDelete.Name;
-
-            //Remove the user ID
-            var userGames = userDelete.User_Game.ToList();
-            foreach (User_Game user_Game in  userGames)
-            {
-                ORM.User_Game.Remove(user_Game);
-            }
-            var userAnswers = userDelete.Answers.ToList();
-            foreach(Answer answer in userAnswers)
-            {
-                ORM.Answers.Remove(answer);
-            }
-            ORM.Users.Remove(userDelete);
-
-            //SaveChanges duhhhhhhhh (Kidding, for real though it does save the changes to the DB)
-            ORM.SaveChanges();
 
             // Send their name back to the view
-            TempData["Eulogy"] = $"{name} has been deleted.";
+            TempData["Eulogy"] = status;
 
             return RedirectToAction("Index", "Home");
         }

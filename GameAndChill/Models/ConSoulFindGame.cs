@@ -5,6 +5,23 @@ using System.Web;
 
 namespace GameAndChill.Models
 {
+    public partial class Game
+    {
+        public int Priority { get; set; }
+        public void DecreasePriority()
+        {
+            int toDecrease = (Genres.Count -3)/2;
+            if (Priority > toDecrease)
+            {
+                Priority -= toDecrease;
+            }
+            else
+            {
+                Priority = 1;
+            }
+        }
+    }
+
     public class ConSoulFindGame
     {
         public ConSoulFindGame(int userID)
@@ -26,7 +43,7 @@ namespace GameAndChill.Models
             List<Genre> list = new List<Genre>();
             foreach (Question_Genre qg in answer.Question.Question_Genre)
             {
-                if(answer.Answer1 == qg.Answer)
+                if (answer.Answer1 == qg.Answer)
                 {
                     list.Add(qg.Genre);
                 }
@@ -36,30 +53,56 @@ namespace GameAndChill.Models
 
         public List<Game> Result()
         {
-            // TODO: Fix this at somepoint. Also possibly put the info into a Cookie
-            // skeleton of the path we take to get games from the user's answers
-            List<Game> result = new List<Game>();
+            //System.Diagnostics.Stopwatch stopwatch = new System.Diagnostics.Stopwatch();
+            //stopwatch.Start();
 
+            // TODO: Priority Queue
+            List<Game> result = new List<Game>();
+            
             foreach (Answer a in User.Answers)
             {
+                // get every genre that corrolates with the user's answer
                 List<Genre> list = GetGenresFromAnswer(a);
-                foreach(Genre g in list)
+                foreach (Genre g in list)
                 {
-                    foreach(Game game in g.Games)
+
+                    // get every game that has that genre
+                    foreach (Game game in g.Games)
                     {
-                        if (game.User_Game.Where(x => x.UserID == User.ID).Count() == 0)
+                        // only add unique games; increment priority every time it shows up
+                        game.Priority++;
+                        if (game.Priority == 1)
                         {
-                            game.Priority++;
-                            if (game.Priority == 1)
-                            {
-                                result.Add(game);
-                            }
+                            result.Add(game);
                         }
                     }
                 }
             }
-            return result.OrderByDescending(g => g.Priority).ToList();
+
+            // run back through our list
+            for (int i = 0; i < result.Count; i++)
+            {
+                // if user already liked it, take it out
+                if (result[i].User_Game.Where(x => x.UserID == User.ID).Count() != 0)
+                {
+                    result.Remove(result[i]);
+                    i--;
+                    continue;
+                }
+
+                // if game has more than 3 genres, modify priority
+                // TODO: decide if it should be 3 or 4
+                if (result[i].Genres.Count > 4)
+                {
+                    result[i].DecreasePriority();
+                }
+            }
+            Random r = new Random();
+            //stopwatch.Stop();
+
+            // randomize then order by priority
+            return result.OrderBy(g => r.Next()).OrderByDescending(g => g.Priority).ToList();
         }
-        
+
     }
 }

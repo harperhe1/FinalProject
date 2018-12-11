@@ -1,4 +1,4 @@
-﻿<br/>
+﻿<br />
 @{
     ViewBag.Title = "Questions";
 }
@@ -8,9 +8,9 @@
 <br />
 <label>Question 1</label>
 <form action="/User/SubmitQuestions" method="post">
-    <input type="hidden" name="id" value="@ViewBag.CurrentUser.ID"/>
+    <input type="hidden" name="id" value="@ViewBag.CurrentUser.ID" />
     <p>@*Filling the question for the time being*@Favorite Disney Princess</p>
-    <select name="answer1">
+    <select name="answer1" id="AnswerSelect" onchange="saveAnswer(this.value);">
         <option value="1">Ariel</option>
         <option value="2">Jasmine</option>
         <option value="3">Belle</option>
@@ -18,7 +18,7 @@
         <option value="5">Mulan</option>
     </select><br /><br />
     <p>What Super Power do you have?</p>
-    <select name="answer2">
+    <select name="answer2" >
         <option value="1">Invisibility</option>
         <option value="2">Flying</option>
         <option value="3">Telekinesis</option>
@@ -51,3 +51,5 @@
     </select><br /><br />
     <input type="submit" value="Submit" />
 </form>
+
+<script src="~/Scripts/SavedAnswers.js"></script>
