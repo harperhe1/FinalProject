@@ -8,3 +8,10 @@
 // classes for your model, open the model in the designer, right-click on the designer surface, and
 // select 'Update Model from Database...', 'Generate Database from Model...', or 'Add Code Generation
 // Item...'.
+
+#region
+//The code that your console fears is.
+//Up, Up, Down, Down, Left, Right, Left, Right, B, A, Start
+//Don't ever forget it.
+//Never grow up
+#endregion

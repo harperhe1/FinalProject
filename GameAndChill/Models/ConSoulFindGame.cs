@@ -54,7 +54,6 @@ namespace GameAndChill.Models
             }
             return list;
         }
-
         public List<Game> Result()
         {
             //System.Diagnostics.Stopwatch stopwatch = new System.Diagnostics.Stopwatch();

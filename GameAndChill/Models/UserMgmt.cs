@@ -46,12 +46,14 @@ namespace GameAndChill.Models
             {
                 ORM.User_Game.Remove(ug);
             }
+            //By doing it this way it will save the changes and then updated the ORM
             SaveAndRefresh();
             return true;
         }
 
         public static bool LikeDislikeGame(int userID, int gameID, bool isLike, out string status)
         {
+            //Check for if user exists
             if (GetUser(userID) == null)
             {
                 status = "User not found";
