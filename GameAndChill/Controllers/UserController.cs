@@ -149,7 +149,9 @@ namespace GameAndChill.Controllers
 
             //Game game = ORM.Games.Find(gameID);
             ConSoulFindGame alg = new ConSoulFindGame(userID);
-            List<Game> games = alg.Result();
+            
+            List<Game> games = alg.Result(out string temp);
+            ViewBag.stop = temp;
             if(games.Count != 0)
             {
                 Game firstResult = games.First();

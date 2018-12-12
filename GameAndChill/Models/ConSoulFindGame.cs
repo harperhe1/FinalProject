@@ -39,6 +39,13 @@ namespace GameAndChill.Models
 
         GameAndChillDBEntities ORM = new GameAndChillDBEntities();
         public User User { get; set; }
+        public static List<Game> games;
+        
+        public static void SetGames()
+        {
+            GameAndChillDBEntities ORM = new GameAndChillDBEntities();
+            games = ORM.Games.ToList();
+        }
 
 
 
@@ -54,16 +61,16 @@ namespace GameAndChill.Models
             }
             return list;
         }
-        public List<Game> Result()
+        public List<Game> Result(out string stop)
         {
-            //System.Diagnostics.Stopwatch stopwatch = new System.Diagnostics.Stopwatch();
-            //stopwatch.Start();
+            System.Diagnostics.Stopwatch stopwatch = new System.Diagnostics.Stopwatch();
+            stopwatch.Start();
 
             // TODO: Priority Queue
             List<Game> result = new List<Game>();
             HashSet<Genre> genres = new HashSet<Genre>();
-
-            foreach (Answer a in User.Answers)
+            var answers = User.Answers.ToList();
+            foreach (Answer a in answers)
             {
                 // get every genre that corrolates with the user's answer
                 List<Genre> list = GetGenresFromAnswer(a);
@@ -76,9 +83,12 @@ namespace GameAndChill.Models
                     }
                 }
             }
+            stop = stopwatch.ElapsedMilliseconds.ToString() + ":POST GENRE ";
             // get every game that has that genre
             int j = 0;
-            foreach (Genre genre in genres.OrderByDescending(g => g.Priority))
+            var temp = genres.OrderByDescending(g => g.Priority).ToList();
+            
+            foreach (Genre genre in temp)
             {
                 j++;
                 foreach (Game game in genre.Games)
@@ -95,29 +105,34 @@ namespace GameAndChill.Models
                     break;
                 }
             }
-
+            stop += stopwatch.ElapsedMilliseconds.ToString() + ":POST GAMES ";
             // run back through our list
+            var userGames = ORM.User_Game.ToList();
             for (int i = 0; i < result.Count; i++)
             {
-                // if user already liked it, take it out
-                if (result[i].User_Game.Where(x => x.UserID == User.ID).Count() != 0)
+                var remove = result[i];
+                 //if user already liked it, take it out
+                if (userGames.Where(x => x.UserID ==User.ID && x.GameID == remove.ID).Count() != 0)
                 {
-                    result.Remove(result[i]);
+                    result.Remove(remove);
                     i--;
                     continue;
                 }
 
                 // if game has more than 3 genres, modify priority
                 // TODO: decide if it should be 3 or 4
-                if (result[i].Genres.Count > 4)
+                // TODO: INCREASE EFFICENCY! adds about 12 seconds per 1000 games
+                /*if (remove.Genres.Count > 4)
                 {
-                    result[i].DecreasePriority();
-                }
+                    remove.DecreasePriority();
+                }*/
             }
             Random r = new Random();
-            //stopwatch.Stop();
+            stop += stopwatch.ElapsedMilliseconds.ToString() + ":END";
+            stopwatch.Stop();
 
             // randomize then order by priority
+            
             return result.OrderBy(g => r.Next()).OrderByDescending(g => g.Priority).ToList();
         }
 
