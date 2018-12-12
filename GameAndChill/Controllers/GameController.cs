@@ -125,9 +125,37 @@ namespace GameAndChill.Controllers
             return View();
         }
 
-        public ActionResult ListAllGames(string search)
+        public ActionResult ListAllGames(string search, int? startAt)
         {
-            ViewBag.ListOfGames = GameMgmt.GetManyGames(search);
+            if(!startAt.HasValue)
+            {
+                startAt = 0;
+            }
+            if(startAt < 0)
+            {
+                startAt = 0;
+            }
+            var temp = GameMgmt.GetManyGames(search);
+            if(temp.Count - (int)startAt <= 100)
+            {
+                ViewBag.ListOfGames = temp.GetRange((int)startAt, temp.Count - (int)startAt);
+                ViewBag.hasMore = false;
+            }
+            else
+            {
+                ViewBag.hasMore = true;
+                ViewBag.ListOfGames = temp.GetRange((int)startAt, 100);
+            }
+            if(search == null || search == "")
+            {
+
+            }
+            else
+            {
+                ViewBag.IsSearch = "&";
+                ViewBag.search = "search=" +search;
+            }
+            ViewBag.start = startAt;
             return View();
         }
     

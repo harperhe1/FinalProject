@@ -5,7 +5,7 @@
 
 <h2 style="display:inline">List All Games</h2>
 <form style="display:inline; float:right" onsubmit="return CheckSearch()">
-    <input type="search" name="search" id="search"/> <input type="submit" value="Search" />
+    <input type="search" name="search" id="search" /> <input type="submit" value="Search" />
 </form>
 
 <table class="table-bordered">
@@ -25,6 +25,22 @@
         </tr>
     }
 </table>
+@if (ViewBag.start != 0)
+{
+    if (ViewBag.start <= 100)
+    {
+        <a class="btn is-warning" href="/Game/ListAllGames?@ViewBag.search">PREV</a>
+    }
+    else
+    {
+        <a class="btn is-warning" href="/Game/ListAllGames?startAt=@(ViewBag.start-100)@ViewBag.IsSearch@ViewBag.search">PREV</a>
+    }
+}
+@if (ViewBag.HasMore)
+{
+    <a class="btn is-success" href="/Game/ListAllGames?startAt=@(ViewBag.start+100)@ViewBag.IsSearch@ViewBag.search">NEXT</a>
+}
+
 
 
 <script type="text/javascript">
@@ -37,4 +53,4 @@
         return true;
     }
 
-    </script >
+</script>
