@@ -5,11 +5,12 @@
 
 <h2>@ViewBag.Question.Name , @ViewBag.Answer</h2>
 Genre
-<form action="/Game/SetGenreQuestions" method="post">   
+<form action="/Game/SetGenreQuestions" class="checkbox" method="post">   
     <input hidden value="@ViewBag.Answer" name="aID" />
     <input hidden value="@ViewBag.Question.ID" name="qID" />
     @for (int i = 0; i < ViewBag.Genres.Count; i++)
     {
+       
         @Html.CheckBox("GenreName", (bool)ViewBag.IsChecked[i]);
         <label>@ViewBag.Genres[i].Name</label>
         <br />
