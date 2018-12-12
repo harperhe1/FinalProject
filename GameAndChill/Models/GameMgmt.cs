@@ -8,15 +8,15 @@ namespace GameAndChill.Models
 {
     public class GameMgmt
     {
-        private static GameAndChillDBEntities ORM = new GameAndChillDBEntities();
-
         // GET
         public static Game GetGame (int id)
         {
+            GameAndChillDBEntities ORM = new GameAndChillDBEntities();
             return ORM.Games.Find(id);
         }
         public static List<Game> GetManyGames(string search)
         {
+            GameAndChillDBEntities ORM = new GameAndChillDBEntities();
             if (search == null || search == "")
             {
                 return ORM.Games.ToList();
@@ -28,6 +28,7 @@ namespace GameAndChill.Models
         }
         public static List<Genre> GetGenres()
         {
+            GameAndChillDBEntities ORM = new GameAndChillDBEntities();
             return ORM.Genres.ToList();
         }
 
@@ -36,8 +37,9 @@ namespace GameAndChill.Models
         public static void AddGame(int gameId)
         {
             // add one game
-            GameToDB(IGDB.GetGameByID(gameId));
-            SaveAndRefresh();
+            GameAndChillDBEntities ORM = new GameAndChillDBEntities();
+            GameToDB(IGDB.GetGameByID(gameId), ORM);
+            ORM.SaveChanges();
         }
         public static bool AddGame(int startId, int endId)
         {
@@ -56,14 +58,15 @@ namespace GameAndChill.Models
             }
             JArray games = IGDB.GetMultipleGamesByID(ids.ToArray());
 
+            GameAndChillDBEntities ORM = new GameAndChillDBEntities();
             foreach (JObject game in games)
             {
                 if (GetGame(game["id"].Value<int>()) == null)
                 {
-                    GameToDB(game);
+                    GameToDB(game, ORM);
                 }
             }
-            SaveAndRefresh();
+            ORM.SaveChanges();
 
             return true;
         }
@@ -76,19 +79,19 @@ namespace GameAndChill.Models
                 return false;
             }
 
-            foreach(JObject genre in genres)
+            GameAndChillDBEntities ORM = new GameAndChillDBEntities();
+            foreach (JObject genre in genres)
             {
-                GenreToDB(genre);
+                GenreToDB(genre, ORM);
             }
-            SaveAndRefresh();
+            ORM.SaveChanges();
 
             return true;
         }
 
-        static void GameToDB(JObject game)
+        static void GameToDB(JObject game, GameAndChillDBEntities ORM)
         {
             // create Game object
-
             Game g = new Game();
             g.ID = int.Parse(game["id"].ToString());
             g.Name = game["name"].ToString();
@@ -143,14 +146,14 @@ namespace GameAndChill.Models
             {
                 foreach (JObject genre in game["genres"])
                 {
-                    GenreToDB(genre);
+                    GenreToDB(genre, ORM);
                     g.Genres.Add(ORM.Genres.Find(genre["id"].Value<int>()));
                 }
             }
             // add to DB
             ORM.Games.Add(g);
         }
-        static void GenreToDB(JObject genre)
+        static void GenreToDB(JObject genre, GameAndChillDBEntities ORM)
         {
             if (ORM.Genres.Find(genre["id"].Value<int>()) == null)
             {
@@ -160,11 +163,6 @@ namespace GameAndChill.Models
                 ORM.Genres.Add(newGenre);
             }
         }
-
-        static void SaveAndRefresh()
-        {
-            ORM.SaveChanges();
-            ORM = new GameAndChillDBEntities();
-        }
+        
     }
 }

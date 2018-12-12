@@ -7,19 +7,20 @@ namespace GameAndChill.Models
 {
     public class QAMgmt
     {
-        static GameAndChillDBEntities ORM = new GameAndChillDBEntities();
-
         // GET
         public static Question GetQuestion(int id)
         {
+            GameAndChillDBEntities ORM = new GameAndChillDBEntities();
             return ORM.Questions.Find(id);
         }
         public static List<Question> GetAllQuestions()
         {
+            GameAndChillDBEntities ORM = new GameAndChillDBEntities();
             return ORM.Questions.ToList();
         }
         public static List<bool> GenreCheckboxes(int qID, int aID)
         {
+            GameAndChillDBEntities ORM = new GameAndChillDBEntities();
             List<bool> Checked = new List<bool>();
             foreach (var genre in ORM.Genres)
             {
@@ -55,7 +56,8 @@ namespace GameAndChill.Models
                     return false;
                 }
             }
-            
+
+            GameAndChillDBEntities ORM = new GameAndChillDBEntities();
             for (int i = 0; i < 5; i++)
             {
                 // create Question object and define its properties
@@ -74,12 +76,14 @@ namespace GameAndChill.Models
                     // add to DB
                     ORM.Answers.Add(q);
                 }
-                SaveAndRefresh();
+                
             }
+            ORM.SaveChanges();
             return true;
         }
         public static void CorrolateQuestions(List<bool> IsGenre, int qID, int aID)
         {
+            GameAndChillDBEntities ORM = new GameAndChillDBEntities();
             List<Genre> Genres = ORM.Genres.ToList();
             int temp = 0;
             for (int i = 0; i < Genres.Count(); i++)
@@ -103,12 +107,7 @@ namespace GameAndChill.Models
                 }
                 temp++;
             }
-            SaveAndRefresh();
-        }
-        static void SaveAndRefresh()
-        {
             ORM.SaveChanges();
-            ORM = new GameAndChillDBEntities();
         }
     }
 }

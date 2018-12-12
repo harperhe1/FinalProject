@@ -7,12 +7,12 @@ namespace GameAndChill.Models
 {
     public class UserMgmt
     {
-        private static GameAndChillDBEntities ORM = new GameAndChillDBEntities();
         public static int AddUserReturnID(User newUser)
         {
             // add to DB
+            GameAndChillDBEntities ORM = new GameAndChillDBEntities();
             ORM.Users.Add(newUser);
-            SaveAndRefresh();
+            ORM.SaveChanges();
 
             // get the ID of our new user
             int id = ORM.Users.Where(x => x.Name == newUser.Name).ToList().Last().ID;
@@ -21,10 +21,12 @@ namespace GameAndChill.Models
         }
         public static User GetUser(int id)
         {
+            GameAndChillDBEntities ORM = new GameAndChillDBEntities();
             return ORM.Users.Find(id);
         }
         public static List<User> GetAllTheUsers()
         {
+            GameAndChillDBEntities ORM = new GameAndChillDBEntities();
             return ORM.Users.ToList();
         }
         public static List<Answer> GetAnswers(int id)
@@ -35,6 +37,7 @@ namespace GameAndChill.Models
         public static bool RemoveLike(int userID, int gameID)
         {
             // check if user exists
+            GameAndChillDBEntities ORM = new GameAndChillDBEntities();
             if (GetUser(userID) == null || GameMgmt.GetGame(gameID) == null)
             {
                 return false;
@@ -47,7 +50,7 @@ namespace GameAndChill.Models
                 ORM.User_Game.Remove(ug);
             }
             //By doing it this way it will save the changes and then updated the ORM
-            SaveAndRefresh();
+            ORM.SaveChanges();
             return true;
         }
 
@@ -64,8 +67,9 @@ namespace GameAndChill.Models
                 status = "Game not found";
                 return false;
             }
-            
+
             // check database if it's liked or disliked by this user
+            GameAndChillDBEntities ORM = new GameAndChillDBEntities();
             User_Game found = ORM.User_Game.Find(userID, gameID);
             if (found == null)
             {
@@ -81,7 +85,7 @@ namespace GameAndChill.Models
                 // set like status to isLike
                 found.IsLike = isLike;
             }
-            SaveAndRefresh();
+            ORM.SaveChanges();
 
             string like = "";
             if (isLike) { like = "liked"; }
@@ -106,6 +110,7 @@ namespace GameAndChill.Models
             string name = userDelete.Name;
 
             //Remove the user ID
+            GameAndChillDBEntities ORM = new GameAndChillDBEntities();
             var userGames = userDelete.User_Game.ToList();
             foreach (User_Game user_Game in userGames)
             {
@@ -119,16 +124,11 @@ namespace GameAndChill.Models
             ORM.Users.Remove(userDelete);
 
             //SaveChanges duhhhhhhhh (Kidding, for real though it does save the changes to the DB)
-            SaveAndRefresh();
+            ORM.SaveChanges();
 
             status = $"{name} has been deleted.";
 
             return true;
-        }
-        static void SaveAndRefresh()
-        {
-            ORM.SaveChanges();
-            ORM = new GameAndChillDBEntities();
         }
     }
 }
