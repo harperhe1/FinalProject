@@ -25,7 +25,14 @@
         <li>@keyword.Name</li>
     }
 </ul>
-<a href="/User/Index">Back to User Home</a>
+@if (ViewBag.User != null)
+{
+    <a href="/User/Index?id=@ViewBag.User.ID">Back to User Home</a>
+}
+else
+{
+    <a href="/Game/ListAllGames">Back to Game List</a>
+}
 
 
 

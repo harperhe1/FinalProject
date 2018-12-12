@@ -1,11 +1,21 @@
 ﻿@{ViewBag.Title = ViewBag.CurrentUser.Name;}
 <br />
+<br />
 <h2>Welcome, @ViewBag.CurrentUser.Name</h2>
+
+<a href="/User/GameFinder?userID=@ViewBag.CurrentUser.ID" class="btn is-success">Find Game</a>
+<a href="/User/EditAnswers?id=@ViewBag.CurrentUser.ID" class="btn is-primary">Edit Answers</a>
+<a href="/User/DeleteUser?id=@ViewBag.CurrentUser.ID" onclick="return confirm('Are you sure you want to delete this user?')" class="btn is-error" name="DeleteUser">Delete User</a>
+<a href="/Home/Index" class="btn is-warning">Sign Out</a>
+
+<br />
+<br />
+<br />
+
 <section class=" with-title">
     <table class="table is-bordered is-center">
         <tr>
-            <th>Game Name</th>
-            <th>@*amazon link?*@</th>
+            <th>Liked Games:</th>
         </tr>
         @foreach (GameAndChill.Models.User_Game game in ViewBag.CurrentUser.User_Game)
         {
@@ -19,22 +29,10 @@
                         @game.Game.Name
                     </td>
                     <td><a href="/Game/Details?id=@game.GameID&UserID=@ViewBag.CurrentUser.ID" class="btn is-primary">Details</a></td>
-                    <td><a href="/User/RemoveGame?GameID=@game.GameID&UserID=@ViewBag.CurrentUser.ID" class="btn is-warning">Remove</a></td>
                     <td><a href="@game.Game.URL" target="_blank" class="btn is-success">Link</a></td>
-                    <td>@*LinkAM This will be for Amazon if we have time*@</td>
+                    <td><a href="/User/RemoveGame?GameID=@game.GameID&UserID=@ViewBag.CurrentUser.ID" class="btn is-error">Remove</a></td>
                 </tr>
             }
         }
     </table>
 </section>
-
-<a href="/User/GameFinder?userID=@ViewBag.CurrentUser.ID">Find Game</a><br />
-<a href="/User/EditAnswers?id=@ViewBag.CurrentUser.ID">Edit Answers</a><br />
-<a href="/User/DeleteUser?id=@ViewBag.CurrentUser.ID" onclick="return confirm('Are you sure you want to delete this user?')" class="btn is-error" name="DeleteUser">Delete User</a><br />
-<a href="/Home/Index">Sign Out</a>
-<table>
-    <tr>
-        <td></td>
-    </tr>
-</table>
-
