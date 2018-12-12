@@ -4,13 +4,14 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@ViewBag.Title - ConSoul.Find(Game)</title>
-    @Styles.Render("~/Content/css") 
+    @Styles.Render("~/Content/NavBarSetup.css")
+    @Styles.Render("~/Content/css")
     @Styles.Render("~/Content/nes.css")
     @Scripts.Render("~/bundles/modernizr")
     <link rel="icon" href="~/favicon.png" />
 </head>
 <body>
-    <div class="navbar navbar-inverse navbar-fixed-top">
+    <div class="navbar navbar-inverse navbar-fixed-top MarioNavBar">
         <div class="container">
             <div class="navbar-header">
                 <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
@@ -21,7 +22,7 @@
                 @Html.ActionLink("ConSoul.Find(Game)", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })
             </div>
             <div class="navbar-collapse collapse">
-                <ul class="nav navbar-nav">
+                <ul class="nav navbar-nav" >
                     <li>@Html.ActionLink("Home", "Index", "Home")</li>
                     <li>@Html.ActionLink("Games", "Index", "Game")</li>
                     <li>@Html.ActionLink("Add User", "SignUp", "User")</li>
