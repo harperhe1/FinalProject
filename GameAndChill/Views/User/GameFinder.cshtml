@@ -8,8 +8,8 @@
 <img src="http:@ViewBag.GameDetails.ImageURL" />
 <br />
 <br />
-<input type="button" class="btn-success" value="Like" onclick="location.href='@Url.Action("LikeGame","User", new { isLike = true, userID = ViewBag.CurrentUser.ID, gameID = ViewBag.GameDetails.ID })'" />
-<input type="button" class="btn-danger" value="Dislike" onclick="location.href='@Url.Action("LikeGame","User", new { isLike = false, userID = ViewBag.CurrentUser.ID, gameID = ViewBag.GameDetails.ID })'" />
+<input type="button" class="btn is-success" value="Like" onclick="location.href='@Url.Action("LikeGame","User", new { isLike = true, userID = ViewBag.CurrentUser.ID, gameID = ViewBag.GameDetails.ID })'" />
+<input type="button" class="btn is-error" value="Dislike" onclick="location.href='@Url.Action("LikeGame","User", new { isLike = false, userID = ViewBag.CurrentUser.ID, gameID = ViewBag.GameDetails.ID })'" />
 
 @*Next Game*@
 <p>Priority: @ViewBag.GameDetails.Priority</p>

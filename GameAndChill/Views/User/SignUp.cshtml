@@ -1,15 +1,15 @@
 ﻿@{ViewBag.Title = "Sign Up";}
-<br/>
+<br/><br />
 <h2>Add User</h2>
 
 <form action="/User/AddUser" method="post">
     <label>Name</label>
-    <input type="text" name="Name" id="name" onkeyup="return testName()" pattern="^[A-Za-z].{2,25}" required />
+    <input class="input" type="text" name="Name" id="name" onkeyup="return testName()" pattern="^[A-Za-z].{2,25}" required />
     <div id="nameError" style="font-weight:bold"></div>
-    <br/><br/><br/>
-    <input type="submit" id="formButton" value="Add User"/><br /><br />
+    <br/><br/>
+    <input type="submit" id="formButton" value="Add User" class="btn is-primary"/><br />
 </form>
 
-<a href="/Home/Index">Cancel</a>
+<a href="/Home/Index" class="btn is-warning">Cancel</a>
 
 <script src="~/Scripts/SignUp.js"></script>
