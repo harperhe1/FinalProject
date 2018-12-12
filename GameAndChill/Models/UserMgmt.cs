@@ -98,7 +98,8 @@ namespace GameAndChill.Models
         public static bool DeleteUser(int id, out string status)
         {
             //Find user ID
-            User userDelete = GetUser(id);
+            GameAndChillDBEntities ORM = new GameAndChillDBEntities();
+            User userDelete = ORM.Users.Find(id);
 
             if (userDelete == null)
             {
@@ -110,7 +111,7 @@ namespace GameAndChill.Models
             string name = userDelete.Name;
 
             //Remove the user ID
-            GameAndChillDBEntities ORM = new GameAndChillDBEntities();
+            
             var userGames = userDelete.User_Game.ToList();
             foreach (User_Game user_Game in userGames)
             {
