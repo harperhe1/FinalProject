@@ -58,12 +58,23 @@ namespace GameAndChill.Controllers
                 ViewBag.Error = "Index out of range. Try again";
                 return View("Error");
             }
-
             ViewBag.Question = QAMgmt.GetQuestion(qID);
-            ViewBag.Genres = GameMgmt.GetGenres();
-            ViewBag.Answer = aID;
-            ViewBag.IsChecked = QAMgmt.GenreCheckboxes(qID, aID);
 
+            TempData["error"] = "BEEP 1";
+            ViewBag.Genres = GameMgmt.GetGenres();
+            TempData["error"] = "BEEP 2";
+            ViewBag.Answer = aID;
+            TempData["error"] = "BEEP 3";
+            try
+            { 
+            ViewBag.IsChecked = QAMgmt.GenreCheckboxes(qID, aID);
+            }
+            catch(Exception e)
+            {
+                TempData["error"] = e.InnerException.Message;
+                return View("Error");
+            }
+            TempData["error"] = "Not in Controller";
             return View();
         }
         public ActionResult SetGenreQuestions(int qID, int aID, IEnumerable<bool> GenreName)
