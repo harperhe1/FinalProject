@@ -23,7 +23,7 @@ namespace GameAndChill.Models
     }
     public partial class Genre
     {
-        public int Priority { get; set; } = 1;
+        public int Priority { get; set; }
     }
 
     public class ConSoulFindGame
@@ -52,7 +52,8 @@ namespace GameAndChill.Models
         private List<Genre> GetGenresFromAnswer(Answer answer)
         {
             List<Genre> list = new List<Genre>();
-            foreach (Question_Genre qg in answer.Question.Question_Genre)
+            var questionGenres = answer.Question.Question_Genre.ToList();
+            foreach (Question_Genre qg in questionGenres)
             {
                 if (answer.Answer1 == qg.Answer)
                 {
@@ -87,7 +88,6 @@ namespace GameAndChill.Models
             // get every game that has that genre
             int j = 0;
             var temp = genres.OrderByDescending(g => g.Priority).ToList();
-            
             foreach (Genre genre in temp)
             {
                 j++;
