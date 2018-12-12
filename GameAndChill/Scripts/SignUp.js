@@ -1,4 +1,4 @@
-﻿regexName = /^[A-Za-z].{2,25}$/;
+﻿regexName = /^[A-Za-z].{1,25}$/;
 
 function testName() {
     var nameValue = $('#name').val();
