@@ -22,7 +22,8 @@ namespace GameAndChill.Models
         {
             GameAndChillDBEntities ORM = new GameAndChillDBEntities();
             List<bool> Checked = new List<bool>();
-            foreach (var genre in ORM.Genres)
+            var genres = ORM.Genres.ToList();
+            foreach (var genre in genres)
             {
                 if (genre.Question_Genre.Where(x => x.QuestionID == qID && x.Answer == aID).Count() != 0)
                 {
